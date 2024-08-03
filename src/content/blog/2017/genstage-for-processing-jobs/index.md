@@ -1,7 +1,11 @@
 ---
 title: "GenStage for processing Jobs"
-description: ""
+description: "ETL pipelines with GenStage"
 date: "Jan 17 2017"
+---
+
+Note: this article is from 2017. Nowadays, you're probably better off using [Broadway](https://github.com/dashbitco/broadway).
+
 ---
 
 We use Elixir at uSwitch to process user-submitted forms, sending the data to a 3rd party API and parsing the output saving the results to a database. The high-level outline of the Elixir process as a recursive loop looks like this:
@@ -63,7 +67,7 @@ Unfortunately, if the long-running SQS request does not return anything (and in 
 
 ## Continous polling for messages
 
-The [GenStage documentation](https://hexdocs.pm/gen_stage/GenStage.html) covers this scenario by using BroadcastDispatcher and keeping a queue and demand in the state of the producer. One part didn't quite fit our setup - having to manually call `sync_notify` to send events. We needed a way to continously request data and send it to Consumers if we received any messages.
+The [GenStage documentation](https://hexdocs.pm/gen_stage/GenStage.html) covers this scenario by using `BroadcastDispatcher` and keeping a queue and demand in the state of the producer. One part didn't quite fit our setup - having to manually call `sync_notify` to send events. We needed a way to continously request data and send it to Consumers if we received any messages.
 
 The solution to that is to create a callback with `handle_cast` that calls itself recursively and call it once at startup:
 
@@ -87,9 +91,9 @@ When Consumers start, they call `handle_demand` which then starts a recursive lo
 
 ## Rate-limiting
 
-The problem with the above is that if a traffic spike occurs, we'll continue to spawn new tasks until we run out of memory. To solve this, we've implemented DynamicSupervisor as the Consumer (in GenStage v0.11.0 renamed to [ConsumerSupervisor](https://hexdocs.pm/gen_stage/ConsumerSupervisor.html#content)). This allows us to specify `:max_demand` which dictates how many child processes can spawn.
+The problem with the above is that if a traffic spike occurs, we'll continue to spawn new tasks until we run out of memory. To solve this, we've implemented `DynamicSupervisor` as the Consumer (in GenStage v0.11.0 renamed to [ConsumerSupervisor](https://hexdocs.pm/gen_stage/ConsumerSupervisor.html#content)). This allows us to specify `:max_demand` which dictates how many child processes can spawn.
 
-In turn, the Producer doesn't know about this limit, so it will continue polling SQS and send events. Once max_demand is reached, it will start filling the internal buffer. In our case, we didn't want messages to be read from the queue until we knew we had the capacity to process them (as another instance of the application might be able to read them). By keeping the number of current demand from Consumers in Producer's state, we only request data from SQS when demand is there.
+In turn, the Producer doesn't know about this limit, so it will continue polling SQS and send events. Once `max_demand` is reached, it will start filling the internal buffer. In our case, we didn't want messages to be read from the queue until we knew we had the capacity to process them (as another instance of the application might be able to read them). By keeping the number of current demand from Consumers in Producer's state, we only request data from SQS when demand is there.
 
 The combination of both these approaches looks like this:
 
@@ -177,7 +181,7 @@ end
 
 ## Cast vs send()
 
-It's possible that [GenStage.cast/2](https://hexdocs.pm/gen_stage/GenStage.html#cast/2) is not the best choice for the GenStage process to send messages to itself. Perhaps it's more suitable for external processes - while you can use [Kernel.send/2](https://hexdocs.pm/elixir/Kernel.html#send/2) internally.
+It's possible that [`GenStage.cast/2`](https://hexdocs.pm/gen_stage/GenStage.html#cast/2) is not the best choice for the GenStage process to send messages to itself. Perhaps it's more suitable for external processes - while you can use [`Kernel.send/2`](https://hexdocs.pm/elixir/Kernel.html#send/2) internally.
 
 ```elixir
 def handle_info(:check_messages, 0), do: {:noreply, [], 0}
