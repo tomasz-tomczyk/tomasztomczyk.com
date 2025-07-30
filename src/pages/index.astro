@@ -1,13 +1,13 @@
 ---
-import { getCollection } from "astro:content";
-import Container from "@components/Container.astro";
-import PageLayout from "@layouts/PageLayout.astro";
-import ArrowCard from "@components/ArrowCard.astro";
-import Link from "@components/Link.astro";
+import { getCollection } from 'astro:content';
+import Container from '@components/Container.astro';
+import PageLayout from '@layouts/PageLayout.astro';
+import ArrowCard from '@components/ArrowCard.astro';
+import Link from '@components/Link.astro';
 // import { dateRange } from "@lib/utils";
-import { SITE, HOME, SOCIALS } from "@consts";
+import { SITE, HOME, SOCIALS } from '@consts';
 
-const blog = (await getCollection("blog"))
+const blog = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
@@ -49,11 +49,11 @@ const blog = (await getCollection("blog"))
           </p>
           <p class="animate">
             I'm passionate about Elixir, DevOps, and Agile methodologies. From
-            creating car-sharing platforms at Toyota Connected to
-            building customer-centric features at Vetspire, my focus has always
-            been on delivering high-quality solutions and helping my team grow.
-            Follow along for stories, lessons, and practical advice from my
-            experiences in software engineering.
+            creating car-sharing platforms at Toyota Connected to building
+            customer-centric features at Vetspire, my focus has always been on
+            delivering high-quality solutions and helping my team grow. Follow
+            along for stories, lessons, and practical advice from my experiences
+            in software engineering.
           </p>
         </article>
       </section>
@@ -142,7 +142,7 @@ const blog = (await getCollection("blog"))
                 >
                   {SOCIAL.NAME}
                 </Link>
-                {"/"}
+                {'/'}
               </li>
             ))
           }

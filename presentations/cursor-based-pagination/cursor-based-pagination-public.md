@@ -164,6 +164,8 @@ ORDER BY family_name ASC, id ASC
 LIMIT 10;
 ```
 
+^Also problematic if we don't have an auto incremented ID column
+
 [.footer-style: #737373, alignment(right)]
 
 ---
@@ -255,32 +257,6 @@ apollographql.com/docs/graphos/schema-design/guides/relay-style-connections
 
 ---
 
-## Absinthe Relay is not enough
-
-![inline](absinthe.png)
-
-^You need to handle things such as:
-Do we have another page? Need to select +1 row
-Do we have a previous page?
-Cursor needs to include all the fields
-You need to handle the WHERE condition and ORDER BY
-
-[.footer-style: #737373, alignment(right)]
-
----
-
-## Our Implementation: Absinthe Relay + Keyset Connection
-
-```elixir
-{:absinthe_relay, "~> 1.5"},
-{:absinthe_relay_keyset_connection, "~> 2.0"}
-```
-
-[.footer-style: #737373, alignment(right)]
-[.autoscale: true]
-
----
-
 ```elixir
 # In your schema file
 use Absinthe.Relay.Schema, :modern
@@ -320,6 +296,32 @@ end
 
 ^My first implementation had dynamic ordering - you could provide any field and it would map to the DB column
 Risky as we might not have indexes. Hard to explain what are DB columns vs calculated fields
+
+[.footer-style: #737373, alignment(right)]
+[.autoscale: true]
+
+---
+
+## Absinthe Relay is not enough
+
+![inline](absinthe.png)
+
+^You need to handle things such as:
+Do we have another page? Need to select +1 row
+Do we have a previous page?
+Cursor needs to include all the fields
+You need to handle the WHERE condition and ORDER BY
+
+[.footer-style: #737373, alignment(right)]
+
+---
+
+## Our Implementation: Absinthe Relay + Keyset Connection
+
+```elixir
+{:absinthe_relay, "~> 1.5"},
+{:absinthe_relay_keyset_connection, "~> 2.0"}
+```
 
 [.footer-style: #737373, alignment(right)]
 [.autoscale: true]
@@ -419,7 +421,13 @@ def accounts(_parent, args, %{context: %{current_provider: provider}}) do
   )
 
   query = Client.query(filters)
-  Vetspire.Pagination.paginate(query, args)
+
+  AbsintheRelayKeysetConnection.from_query(
+    query,
+    &Vetspire.Repo.all/1,
+    args,
+    %{unique_column: :id}
+  )
 end
 ```
 
@@ -471,14 +479,21 @@ const { data, loading } = useGetAccountsQuery({
 
 ---
 
+## [fit] Demo
+
+[.footer-style: #737373, alignment(right)]
+
+---
+
 ## The NULL Values Problem
 
 NULL values in sort columns cause inconsistent cursor behavior
 
 ```sql
--- This can cause issues with cursors
 SELECT * FROM clients
-WHERE family_name > NULL  -- NULL comparisons are always false!
+WHERE
+  family_name > NULL  -- NULL comparisons are always false!
+  AND id > 10
 ORDER BY family_name ASC, id ASC;
 ```
 
@@ -490,8 +505,8 @@ ORDER BY family_name ASC, id ASC;
 
 ## The NULL Values Problem
 
-- **Always include a non-NULL column** (like `id`) in sort order
-- If you can't get rid of `NULL` values, **use COALESCE** for NULL-safe sorting
+- Get rid of `NULL`s if you can
+- If you can't, use **COALESCE** for NULL-safe sorting
 
 ```elixir
 AbsintheRelayKeysetConnection.from_query(
@@ -567,8 +582,6 @@ Can migrate later (like GitHub and Shopify did)
 
 ---
 
-## [fit] Demo & questions
-
-^Search for "Te" and go to 2nd page, compare before & after
+## [fit] Questions
 
 [.footer-style: #737373, alignment(right)]
