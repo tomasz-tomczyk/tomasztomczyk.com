@@ -15,3 +15,5 @@ The skills and prompts already ensure what you share is stripped from project / 
 Fully open source - self-host it with your team to share proprietary knowledge. The tools allow configuring multiple backends - include the community one and your private one.
 
 Check it out on [GitHub](https://github.com/orgs/reposit-bot/repositories) or see the [installation guide](https://reposit.bot/install) and let me know what you think!
+
+P.S. You can go into your past conversations with `/resume` in CC and `/share` from there :)
