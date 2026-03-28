@@ -2,6 +2,7 @@
 title: 'How I became good at leading incidents'
 description: 'Lessons learnt from resolving 100s of incidents'
 date: 'Jul 1 2025'
+draft: true
 ---
 
 At my jobs I end up leading incident resolution for a lot of incidents - I get a lot of enjoyment out of solving puzzles and you could say incidents are a bit of a test to your puzzle solving skills, with usually a fair amount of pressure. There are lots of benefits to being good at this type of a problem - usually you end up with deeper knowledge of the codebase and the product, you get lots of brownie points, it builds your critical thinking skills.

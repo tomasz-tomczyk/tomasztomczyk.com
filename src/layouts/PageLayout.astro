@@ -17,6 +17,7 @@ const { title, description } = Astro.props;
   <head>
     <Head title={`${title} | ${SITE.NAME}`} description={description} />
     <script
+      is:inline
       defer
       src="https://cloud.umami.is/script.js"
       data-website-id="2c50a436-e556-47ee-b685-8bc5727fb84d"></script>
