@@ -1,0 +1,54 @@
+---
+import { Sidebar, type SidebarItem } from "@pressmark/astro";
+import { SITE, SOCIALS } from "@consts";
+
+type Props = {
+  currentPath?: string;
+};
+
+const { currentPath = "/" } = Astro.props;
+
+const items: SidebarItem[] = [
+  {
+    href: "/",
+    label: "Home",
+    icon: `<path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/>`,
+  },
+  {
+    href: "/blog",
+    label: "Blog",
+    icon: `<path d="M5 4h11l3 3v13H5z"/><path d="M16 4v3h3"/><path d="M8 12h7M8 16h5"/>`,
+  },
+];
+---
+
+<Sidebar brand="/T." items={items} currentPath={currentPath}>
+  <div class="mt-10">
+    <h4 class="panel-label mb-3">Elsewhere</h4>
+    <ul class="space-y-2 text-sm">
+      {SOCIALS.map((social) => (
+        <li>
+          <a
+            href={social.HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-charcoal hover:text-accent flex items-center gap-2"
+            aria-label={`${SITE.NAME} on ${social.NAME}`}
+          >
+            <span class="capitalize">{social.NAME}</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" class="opacity-60"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </li>
+      ))}
+      <li>
+        <a
+          href={`mailto:${SITE.EMAIL}`}
+          class="text-charcoal hover:text-accent"
+          aria-label={`Email ${SITE.NAME}`}
+        >
+          {SITE.EMAIL}
+        </a>
+      </li>
+    </ul>
+  </div>
+</Sidebar>

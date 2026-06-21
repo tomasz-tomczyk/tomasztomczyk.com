@@ -1,56 +1,67 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import PageLayout from "@layouts/PageLayout.astro";
-import Container from "@components/Container.astro";
-import ArrowCard from "@components/ArrowCard.astro";
+import SiteLayout from "@layouts/SiteLayout.astro";
+import { PanelLabel } from "@pressmark/astro";
 import { BLOG } from "@consts";
 
 const data = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
+  .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  
-type Acc = {
-  [year: string]: CollectionEntry<"blog">[];
-}
 
-const posts = data.reduce((acc: Acc, post) => {
-    const year = post.data.date.getFullYear().toString();
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(post);
-    return acc;
-  }, {});
+const byYear = data.reduce<Record<string, CollectionEntry<"blog">[]>>((acc, post) => {
+  const year = post.data.date.getFullYear().toString();
+  (acc[year] ??= []).push(post);
+  return acc;
+}, {});
 
-const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
+const years = Object.keys(byYear).sort((a, b) => parseInt(b) - parseInt(a));
+
+const monthDay = (date: Date) =>
+  date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 ---
 
-<PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
-  <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-black dark:text-white">
-        Blog
-      </div>
-      <div class="space-y-4">
-        {years.map(year => (
-          <section class="animate space-y-4">
-            <div class="font-semibold text-black dark:text-white">
-              {year}
-            </div>
-            <div>
-              <ul class="flex flex-col gap-4">
-                {
-                  posts[year].map((post) => (
-                    <li>
-                      <ArrowCard entry={post}/>
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-          </section>
-        ))}
-      </div>
+<SiteLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
+  <main class="ml-[260px] px-12 py-10">
+    <header class="max-w-[42rem] mb-12">
+      <PanelLabel class="mb-3">{BLOG.TITLE}</PanelLabel>
+      <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-charcoal tracking-[-0.015em]">
+        Notes and essays.
+      </h1>
+      <p class="mt-5 text-base leading-relaxed text-charcoal/80 max-w-[36rem]">
+        {BLOG.DESCRIPTION}
+      </p>
+    </header>
+
+    <div class="max-w-[44rem] space-y-12">
+      {years.map((year) => (
+        <section>
+          <div class="flex items-baseline gap-4 mb-4">
+            <h2 class="font-display text-2xl text-accent">{year}</h2>
+            <div class="flex-1 border-t border-warm-white" />
+            <span class="font-mono text-xs text-charcoal/50">{byYear[year].length} {byYear[year].length === 1 ? "post" : "posts"}</span>
+          </div>
+          <ul class="space-y-0 border-t border-warm-white">
+            {byYear[year].map((post) => (
+              <li class="border-b border-warm-white">
+                <a href={`/blog/${post.id}`} class="group flex items-baseline gap-6 py-4 -mx-3 px-3 hover:bg-warm-white/40 transition-colors">
+                  <time class="shrink-0 font-mono text-xs text-charcoal/60 w-16">{monthDay(post.data.date)}</time>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-display text-lg text-charcoal group-hover:text-accent leading-snug">
+                      {post.data.title}
+                    </div>
+                    {post.data.description && (
+                      <div class="text-sm text-charcoal/70 mt-1 line-clamp-2">
+                        {post.data.description}
+                      </div>
+                    )}
+                  </div>
+                  <span class="shrink-0 text-accent text-sm opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </div>
-  </Container>
-</PageLayout>
+  </main>
+</SiteLayout>

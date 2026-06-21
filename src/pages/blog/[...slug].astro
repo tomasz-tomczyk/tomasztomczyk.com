@@ -1,14 +1,12 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
-import PageLayout from "@layouts/PageLayout.astro";
-import Container from "@components/Container.astro";
-import FormattedDate from "@components/FormattedDate.astro";
+import SiteLayout from "@layouts/SiteLayout.astro";
+import { Prose } from "@pressmark/astro";
 import { readingTime } from "@lib/utils";
-import BackToPrev from "@components/BackToPrev.astro";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
-    .filter(post => !post.data.draft)
+    .filter((post) => !post.data.draft)
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
   return posts.map((post) => ({
     params: { slug: post.id },
@@ -19,31 +17,42 @@ type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
 const { Content } = await render(post);
+
+const dateLabel = post.data.date.toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+const minutes = readingTime(post.body ?? "");
 ---
 
-<PageLayout title={post.data.title} description={post.data.description}>
-  <Container>
-    <div class="animate">
-      <BackToPrev href="/blog">
-        Back to blog
-      </BackToPrev>
+<SiteLayout title={post.data.title} description={post.data.description}>
+  <main class="ml-[260px] px-12 py-10">
+    <div class="max-w-[42rem] mb-6">
+      <a href="/blog" class="btn-link text-sm">← Back to blog</a>
     </div>
-    <div class="space-y-1 my-10">
-      <div class="animate flex items-center gap-1.5">
-        <div class="font-base text-sm">
-          <FormattedDate date={post.data.date} />
-        </div>
-        &bull;
-        <div class="font-base text-sm">
-          {readingTime(post.body ?? "")}
-        </div>
+
+    <header class="max-w-[42rem] mb-10">
+      <div class="panel-label mb-3">
+        {dateLabel} · {minutes}
       </div>
-      <div class="animate text-2xl font-semibold text-black dark:text-white">
+      <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-charcoal tracking-[-0.015em]">
         {post.data.title}
-      </div>
-    </div>
-    <article class="animate">
+      </h1>
+      {post.data.description && (
+        <p class="mt-6 text-base leading-relaxed text-charcoal max-w-[36rem]">
+          {post.data.description}
+        </p>
+      )}
+    </header>
+
+    <Prose dropcap>
       <Content />
-    </article>
-  </Container>
-</PageLayout>
+    </Prose>
+
+    <footer class="mt-16 pt-6 border-t border-warm-white max-w-[42rem] flex items-center justify-between text-xs font-mono text-charcoal/60">
+      <a href="/blog" class="text-accent hover:text-charcoal">← All posts</a>
+      <span>{dateLabel}</span>
+    </footer>
+  </main>
+</SiteLayout>

@@ -23,6 +23,9 @@ importers:
       '@fontsource/lora':
         specifier: ^5.2.8
         version: 5.2.8
+      '@pressmark/astro':
+        specifier: ^0.2.1
+        version: 0.2.1(astro@6.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(tailwindcss@4.3.0)
       '@tailwindcss/typography':
         specifier: ^0.5.19
         version: 0.5.19(tailwindcss@4.3.0)
@@ -601,6 +604,16 @@ packages:
   '@pkgr/core@0.2.9':
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@pressmark/astro@0.2.1':
+    resolution: {integrity: sha512-T06/bTp+qQOvt1LMFAmeI1taFpXOrxfiqnDcVFpa1Lx3UHueAV1Z+jgsPPgFZg5wdMqrrwxcDa8TwyJuKNNJzQ==}
+    peerDependencies:
+      astro: ^5.0.0 || ^6.0.0
+
+  '@pressmark/theme@0.2.0':
+    resolution: {integrity: sha512-DA649yWYe3hqxfyD3NexTs5MLdehJk7n+yvqRRrcThJ4hozCZtoYVMr0CubX4pJe0ORIVm/OkILOKIJYi/jc+A==}
+    peerDependencies:
+      tailwindcss: ^4.0.0
 
   '@rollup/pluginutils@5.3.0':
     resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
@@ -3565,6 +3578,17 @@ snapshots:
   '@oslojs/encoding@1.1.0': {}
 
   '@pkgr/core@0.2.9': {}
+
+  '@pressmark/astro@0.2.1(astro@6.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(tailwindcss@4.3.0)':
+    dependencies:
+      '@pressmark/theme': 0.2.0(tailwindcss@4.3.0)
+      astro: 6.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0)
+    transitivePeerDependencies:
+      - tailwindcss
+
+  '@pressmark/theme@0.2.0(tailwindcss@4.3.0)':
+    dependencies:
+      tailwindcss: 4.3.0
 
   '@rollup/pluginutils@5.3.0(rollup@4.60.4)':
     dependencies:

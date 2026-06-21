@@ -1,3 +1,8 @@
 allowBuilds:
   esbuild: true
   sharp: true
+minimumReleaseAgeExclude:
+  - '@pressmark/astro@0.2.0'
+  - '@pressmark/theme@0.2.0'
+  - '@pressmark/astro@0.2.1'
+  - '@pressmark/astro@0.2.2'

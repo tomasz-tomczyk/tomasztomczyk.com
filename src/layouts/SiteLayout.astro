@@ -1,0 +1,30 @@
+---
+import { BaseLayout } from "@pressmark/astro";
+import TomaszSidebar from "@components/TomaszSidebar.astro";
+import { SITE } from "@consts";
+import "@styles/global.css";
+
+type Props = {
+  title: string;
+  description: string;
+};
+
+const { title, description } = Astro.props;
+const currentPath = Astro.url.pathname;
+const fullTitle = title === SITE.NAME ? title : `${title} | ${SITE.NAME}`;
+---
+
+<BaseLayout title={fullTitle} description={description}>
+  <Fragment slot="head">
+    <script
+      is:inline
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="2c50a436-e556-47ee-b685-8bc5727fb84d"
+    ></script>
+  </Fragment>
+
+  <TomaszSidebar slot="sidebar" currentPath={currentPath} />
+
+  <slot />
+</BaseLayout>
