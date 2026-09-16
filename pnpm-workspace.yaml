@@ -1,12 +1,14 @@
+# Pressmark is NOT a workspace package — it is a published dependency
+# (see .pnpmfile.cjs for the PRESSMARK_LOCAL development mode).
 packages:
   - '.'
-  - '../pressmark/packages/*'
 
 allowBuilds:
   esbuild: true
   sharp: true
+# Our own packages, published from tomasz-tomczyk/pressmark with provenance.
+# The release-age policy exists to blunt third-party supply-chain attacks; it
+# has nothing to protect us from here, and pinning exact versions meant editing
+# this file on every Pressmark release.
 minimumReleaseAgeExclude:
-  - '@pressmark/astro@0.2.0'
-  - '@pressmark/theme@0.2.0'
-  - '@pressmark/astro@0.2.1'
-  - '@pressmark/astro@0.2.2'
+  - '@pressmark/*'
