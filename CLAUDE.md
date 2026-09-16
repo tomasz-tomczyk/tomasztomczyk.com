@@ -60,3 +60,60 @@ When spawning subagents (Agent/Task tool), the routing block is automatically in
 | `ctx stats` | Call the `ctx_stats` MCP tool and display the full output verbatim |
 | `ctx doctor` | Call the `ctx_doctor` MCP tool, run the returned shell command, display as checklist |
 | `ctx upgrade` | Call the `ctx_upgrade` MCP tool, run the returned shell command, display as checklist |
+
+---
+
+# Working on this site
+
+## Pressmark
+
+The theme is a separate repo at `../pressmark`, published as `@pressmark/theme`
+and `@pressmark/astro`. Its design rules live in `../pressmark/CLAUDE.md` — read
+that before changing anything under `../pressmark`, not this file.
+
+`package.json` pins the published range. To build against the local checkout:
+
+```
+pnpm pressmark:local    # ../pressmark, edits are live
+pnpm pressmark:npm      # back to the published packages
+```
+
+**After switching modes, or after any edit under `../pressmark`, clear caches:**
+
+```
+rm -rf .astro node_modules/.vite && pnpm dev
+```
+
+Skipping this is the most common way to waste an hour here. The dev server keeps
+serving the previous markdown render and CSS, so a correct change looks like it
+did nothing. Before concluding a change failed, check *what you are looking at*:
+diff the served HTML against a fresh `pnpm build` in `dist/`.
+
+`pnpm install` will not repair a `node_modules/@pressmark/*` link you replaced —
+it compares the lockfile against its own state and never inspects `node_modules`,
+so it reports "Already up to date" with the packages missing. Use `pnpm pressmark:npm`.
+
+Changing Pressmark means releasing it: commit, push, `gh release create vX.Y.Z`
+(the release Action publishes both packages with provenance), then bump the range
+here. Packages published in the last 24h need `@pressmark/*` in
+`minimumReleaseAgeExclude` — it is already there.
+
+## Build-time guards
+
+`astro build` fails by design on:
+
+- a per-post `theme:` block whose text roles are unreadable on their background
+  (`src/lib/postTheme.ts` — code roles are judged on `raised`, page text on `surface`)
+- two tags that slug to the same URL (`src/lib/utils.ts`)
+
+Both exist because frontmatter is free-form. Fix the frontmatter; do not loosen
+the guard. `pnpm test` runs their unit tests — plain `node --experimental-strip-types`,
+no framework.
+
+## Editing files with non-ASCII characters
+
+Posts and components are full of em-dashes, arrows and `✦`. `perl -pi` without
+`-CSD` reads and writes bytes and silently mangles any line it rewrites that
+contains one; zsh's `echo` expands `\n` into a real newline, which breaks JSON on
+stdin. Use `python3` with explicit `encoding='utf-8'` for scripted edits, or a
+CSS escape (`content: "\2022"`) where the file format allows it.
