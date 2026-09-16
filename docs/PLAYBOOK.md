@@ -4,13 +4,29 @@ Working notes for tomasztomczyk.com + Pressmark. Written at the end of the
 first migration session so the next one can pick up cold.
 
 **Repos.** `~/Server/side/tomasztomczyk.com` (branch `pressmark-migration`) and
-`~/Server/side/pressmark` (branch `role-tokens`). The site links Pressmark
-through a pnpm workspace (`../pressmark/packages/*`), so edits in Pressmark are
-live in the site with no publish step.
+`~/Server/side/pressmark` (`main`, released as v0.5.0).
 
-**Nothing is committed in either repo.** That was deliberate — the work spans
-two repos and wasn't ready to land. First job next session: review the diffs and
-decide what to commit.
+**Two Pressmark modes.** `package.json` states the published range (`^0.5.0`)
+and the lockfile matches, so a fresh clone and the Pages deploy need nothing
+special. To develop against the sibling checkout:
+
+    pnpm pressmark:local   # build against ../pressmark, edits are live
+    pnpm pressmark:npm     # back to the published packages
+
+It is a `node_modules` symlink swap, not a resolution change — deliberately.
+A `.pnpmfile` hook or a committed override makes the lockfile differ per mode,
+and whichever you ran last is the one you commit. Clear `.astro` and
+`node_modules/.vite` after switching.
+
+`pressmark:npm` re-points at `node_modules/.pnpm` rather than reinstalling:
+pnpm decides `install` has nothing to do by comparing the lockfile against its
+own state and never inspects `node_modules`, so it will not repair a link you
+replaced — not even with `--force`.
+
+**Both repos are committed and pushed.** Pressmark shipped as v0.5.0 (theme and
+astro on npm, published by the release Action with OIDC provenance). The site is
+on `pressmark-migration`; the Pages deploy only runs on `main`, so merging is
+what ships it.
 
 ---
 
