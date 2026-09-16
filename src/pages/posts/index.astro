@@ -1,0 +1,63 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import SiteLayout from "@layouts/SiteLayout.astro";
+import PostListItem from "@components/PostListItem.astro";
+import { POSTS } from "@consts";
+
+const data = (await getCollection("posts"))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const byYear = data.reduce<Record<string, CollectionEntry<"posts">[]>>((acc, post) => {
+  const year = post.data.date.getFullYear().toString();
+  (acc[year] ??= []).push(post);
+  return acc;
+}, {});
+
+const years = Object.keys(byYear).sort((a, b) => parseInt(b) - parseInt(a));
+---
+
+<SiteLayout title={POSTS.TITLE} description={POSTS.DESCRIPTION}>
+  <div class="px-5 py-10 md:px-12">
+    <div class="mx-auto max-w-[46rem]">
+    <header class="mb-12">
+      <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em]">
+        Posts.
+      </h1>
+      <p class="dek mt-5 max-w-[36rem]">
+        {POSTS.DESCRIPTION}
+      </p>
+      {/* Tags are a secondary surface — linked from here rather than the nav,
+          which is doing fine with three items. */}
+      <p class="meta mt-5">
+        <a href="/tags" class="text-accent hover:underline hover:underline-offset-4">
+          Browse by tag →
+        </a>
+      </p>
+    </header>
+
+    <div class="space-y-12">
+      {years.map((year) => (
+        <section>
+          <div class="flex items-baseline gap-4 mb-4">
+            <h2 class="font-display text-2xl text-accent">{year}</h2>
+            <div class="flex-1 border-t border-raised" />
+            <span class="meta">{byYear[year].length} {byYear[year].length === 1 ? "post" : "posts"}</span>
+          </div>
+          {/* No border-t: the year line above already draws that rule. */}
+          <ul class="space-y-0">
+            {byYear[year].map((post) => (
+              <PostListItem
+                post={post}
+                timeWidth="w-16"
+                descriptionLines={2}
+                dateFormat={{ month: "short", day: "numeric" }}
+              />
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+    </div>
+  </div>
+</SiteLayout>

@@ -15,3 +15,10 @@ export type Socials = {
   NAME: string;
   HREF: string;
 }[];
+
+export type Author = {
+  NAME: string;
+  BIO: string;
+  /** Path under /public, e.g. "/avatar.jpg". Omitted until there's an image. */
+  AVATAR?: string;
+};

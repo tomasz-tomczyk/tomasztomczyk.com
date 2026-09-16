@@ -11,21 +11,18 @@
     "preview:network": "astro preview --host",
     "astro": "astro",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "test": "node --experimental-strip-types --no-warnings src/lib/postTheme.test.ts && node --experimental-strip-types --no-warnings src/lib/utils.test.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.6",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
-    "@fontsource/inter": "^5.2.8",
-    "@fontsource/lora": "^5.2.8",
-    "@pressmark/astro": "^0.2.1",
-    "@tailwindcss/typography": "^0.5.19",
+    "@pressmark/astro": "workspace:*",
+    "@pressmark/theme": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.3",
-    "clsx": "^2.1.1",
     "sharp": "^0.34.5",
-    "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.0",
     "zod": "^4.4.3"
   },

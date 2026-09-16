@@ -1,4 +1,4 @@
-import type { Site, Metadata, Socials } from "@types";
+import type { Site, Metadata, Socials, Author } from "@types";
 
 export const SITE: Site = {
   NAME: "Tomasz Tomczyk",
@@ -10,24 +10,26 @@ export const SITE: Site = {
 
 export const HOME: Metadata = {
   TITLE: "Home",
-  DESCRIPTION: "Astro Nano is a minimal and lightweight blog and portfolio.",
+  DESCRIPTION: "Notes and essays on software engineering by Tomasz Tomczyk.",
 };
 
-export const BLOG: Metadata = {
-  TITLE: "Blog",
-  DESCRIPTION: "A collection of articles on topics I am passionate about.",
+export const POSTS: Metadata = {
+  TITLE: "Posts",
+  DESCRIPTION:
+    "Guides, notes, and things I've learned — on Elixir, DevOps, tooling, and leading teams.",
 };
 
-// export const WORK: Metadata = {
-//   TITLE: "Work",
-//   DESCRIPTION: "Where I have worked and what I have done.",
-// };
+export const ABOUT: Metadata = {
+  TITLE: "About",
+  DESCRIPTION:
+    "Software engineer working on Elixir, DevOps, and engineering leadership. Where I've worked, and how to reach me.",
+};
 
-// export const PROJECTS: Metadata = {
-//   TITLE: "Projects",
-//   DESCRIPTION:
-//     "A collection of my projects, with links to repositories and demos.",
-// };
+/** Rendered by AuthorCard on every post. Written once, shown everywhere. */
+export const AUTHOR: Author = {
+  NAME: "Tomasz Tomczyk",
+  BIO: "Software engineer. I write about Elixir, DevOps, and the practice of leading teams well.",
+};
 
 export const SOCIALS: Socials = [
   {
@@ -38,4 +40,29 @@ export const SOCIALS: Socials = [
     NAME: "linkedin",
     HREF: "https://www.linkedin.com/in/tomczyktomasz",
   },
+  {
+    NAME: "bluesky",
+    HREF: "https://bsky.app/profile/tomasztomczyk.bsky.social",
+  },
 ];
+
+/**
+ * Where I've worked. Rendered on /about.
+ *
+ * TODO(tomasz): the PERIOD values below are placeholders — I don't have your
+ * real dates. Check every one before this goes live.
+ */
+export const ROLES = [
+  {
+    ORG: "Vetspire",
+    TITLE: "Staff Engineer",
+    PERIOD: "2021 — present",
+    NOTE: "Previously Head of Engineering. Elixir, Phoenix, and GraphQL at scale, with a team across the US and UK.",
+  },
+  {
+    ORG: "Toyota Connected",
+    TITLE: "Senior Software Engineer",
+    PERIOD: "2018 — 2021",
+    NOTE: "Car-sharing and mobility platforms.",
+  },
+] as const;

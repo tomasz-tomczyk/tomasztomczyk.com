@@ -2,22 +2,21 @@
 import { getCollection } from "astro:content";
 import SiteLayout from "@layouts/SiteLayout.astro";
 import { PanelLabel } from "@pressmark/astro";
+import PostListItem from "@components/PostListItem.astro";
 import { SITE, HOME } from "@consts";
 
-const posts = (await getCollection("blog"))
+const posts = (await getCollection("posts"))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
-
-const formatDate = (date: Date) =>
-  date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 ---
 
 <SiteLayout title={SITE.NAME} description={HOME.DESCRIPTION}>
-  <main class="ml-[260px] px-12 py-10">
-    <section class="max-w-[42rem] mb-16">
-      <PanelLabel class="mb-3">Hello</PanelLabel>
-      <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-charcoal tracking-[-0.015em] mb-8">
+  <div class="px-5 py-10 md:px-12">
+    <div class="mx-auto max-w-[46rem]">
+    <section class="mb-16">
+      <PanelLabel class="mb-7">Hello</PanelLabel>
+      <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em] mb-8">
         Hi, I'm Tomasz.
       </h1>
       <div class="prose-pressmark space-y-5">
@@ -33,31 +32,17 @@ const formatDate = (date: Date) =>
       </div>
     </section>
 
-    <section class="max-w-[44rem]">
+    <section>
       <div class="flex items-baseline justify-between mb-6">
         <PanelLabel>Latest posts</PanelLabel>
-        <a href="/blog" class="btn-link text-sm">See all →</a>
+        <a href="/posts" class="btn-link">See all →</a>
       </div>
-      <ul class="space-y-0 border-t border-warm-white">
+      <ul class="space-y-0">
         {posts.map((post) => (
-          <li class="border-b border-warm-white">
-            <a href={`/blog/${post.id}`} class="group flex items-baseline gap-6 py-4 hover:bg-warm-white/40 -mx-3 px-3 transition-colors">
-              <time class="shrink-0 font-mono text-xs text-charcoal/60 w-24">{formatDate(post.data.date)}</time>
-              <div class="flex-1 min-w-0">
-                <div class="font-display text-lg text-charcoal group-hover:text-accent leading-snug">
-                  {post.data.title}
-                </div>
-                {post.data.description && (
-                  <div class="text-sm text-charcoal/70 mt-1 line-clamp-1">
-                    {post.data.description}
-                  </div>
-                )}
-              </div>
-              <span class="shrink-0 text-accent text-sm opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-            </a>
-          </li>
+          <PostListItem post={post} timeWidth="w-24" descriptionLines={1} />
         ))}
       </ul>
     </section>
-  </main>
+    </div>
+  </div>
 </SiteLayout>

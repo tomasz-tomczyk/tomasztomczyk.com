@@ -1,0 +1,49 @@
+---
+import SiteLayout from "@layouts/SiteLayout.astro";
+import { getTags } from "@lib/tags";
+
+const tags = await getTags();
+---
+
+<SiteLayout
+  title="Tags"
+  description="Every topic written about here, and how much of it there is."
+>
+  <div class="px-5 py-10 md:px-12">
+    <div class="mx-auto max-w-[46rem]">
+      <header class="mb-12">
+        <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em]">
+          Tags.
+        </h1>
+      </header>
+
+      {tags.length === 0 ? (
+        <p class="text-lg text-ink/70">No posts are tagged yet.</p>
+      ) : (
+        <ul class="list-none p-0 m-0">
+          {tags.map((tag) => (
+            <li class="border-b border-raised last:border-b-0">
+              <a
+                href={`/tags/${tag.slug}`}
+                class="group flex items-baseline gap-6 py-4 -mx-3 px-3 hover:bg-raised/40 transition-colors"
+              >
+                <span class="flex-1 min-w-0 font-display text-xl text-ink group-hover:text-accent leading-snug">
+                  {tag.name}
+                </span>
+                <span class="meta shrink-0">
+                  {tag.posts.length} {tag.posts.length === 1 ? "post" : "posts"}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <p class="meta mt-10 pt-6 border-t border-line">
+        <a href="/posts" class="text-accent hover:underline hover:underline-offset-4">
+          ← All posts
+        </a>
+      </p>
+    </div>
+  </div>
+</SiteLayout>

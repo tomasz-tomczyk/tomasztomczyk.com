@@ -7,7 +7,7 @@ type Context = {
 };
 
 export async function GET(context: Context) {
-  const blog = (await getCollection("blog")).filter((post) => !post.data.draft);
+  const blog = (await getCollection("posts")).filter((post) => !post.data.draft);
 
   const items = [...blog].sort(
     (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
@@ -21,7 +21,7 @@ export async function GET(context: Context) {
       title: item.data.title,
       description: item.data.description,
       pubDate: item.data.date,
-      link: `/blog/${item.id}/`,
+      link: `/posts/${item.id}/`,
     })),
   });
 }

@@ -1,16 +1,8 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-export function formatDate(date: Date) {
-  return Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "2-digit",
-    year: "numeric"
-  }).format(date);
+export function formatDate(
+  date: Date,
+  opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", year: "numeric" },
+) {
+  return Intl.DateTimeFormat("en-US", opts).format(date);
 }
 
 export function readingTime(html: string) {
@@ -20,21 +12,57 @@ export function readingTime(html: string) {
   return `${readingTimeMinutes} min read`;
 }
 
-export function dateRange(startDate: Date, endDate?: Date | string): string {
-  const startMonth = startDate.toLocaleString("default", { month: "short" });
-  const startYear = startDate.getFullYear().toString();
-  let endMonth;
-  let endYear;
+/**
+ * Turn a free-form frontmatter tag into a URL segment.
+ *
+ * Tags are authored as plain text with no allowlist, matching the free-form
+ * choice made for post themes. That keeps authoring frictionless and puts the
+ * burden here: anything that isn't a letter or digit becomes a hyphen.
+ *
+ * Throws rather than returning "" for a tag with nothing slug-able, so the
+ * failure surfaces at build time instead of producing the route `/tags/`.
+ */
+export function tagSlug(tag: string): string {
+  const slug = tag
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
-  if (endDate) {
-    if (typeof endDate === "string") {
-      endMonth = "";
-      endYear = endDate;
-    } else {
-      endMonth = endDate.toLocaleString("default", { month: "short" });
-      endYear = endDate.getFullYear().toString();
-    }
+  if (!slug) {
+    throw new Error(
+      `Tag "${tag}" has no letters or digits, so it cannot become a URL. ` +
+        `Rename it in the post's frontmatter.`,
+    );
+  }
+  return slug;
+}
+
+/**
+ * Throw if two DIFFERENT tags would share a slug.
+ *
+ * Free-form tags mean `CI/CD` and `ci-cd` both resolve to `ci-cd`: one page
+ * silently serving two tags, and a duplicate route from `getStaticPaths`.
+ * The same tag repeated across posts is the normal case and passes.
+ *
+ * Called from the tag routes, so a clash fails `astro build` rather than
+ * shipping. It catches collisions, not typos — `elixr` is a legitimate new
+ * tag as far as this can tell.
+ */
+export function assertNoTagCollisions(tags: string[]): void {
+  const bySlug = new Map<string, Set<string>>();
+  for (const tag of tags) {
+    const slug = tagSlug(tag);
+    (bySlug.get(slug) ?? bySlug.set(slug, new Set()).get(slug)!).add(tag);
   }
 
-  return `${startMonth}${startYear} - ${endMonth}${endYear}`;
+  const clashes = [...bySlug].filter(([, spellings]) => spellings.size > 1);
+  if (clashes.length) {
+    throw new Error(
+      `Tags collide on the same URL:\n` +
+        clashes
+          .map(([slug, spellings]) => `  /tags/${slug} ← ${[...spellings].join(", ")}`)
+          .join("\n") +
+        `\nPick one spelling per tag in the posts' frontmatter.`,
+    );
+  }
 }

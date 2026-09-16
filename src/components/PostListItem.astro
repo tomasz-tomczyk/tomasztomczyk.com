@@ -1,0 +1,40 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { formatDate } from "@lib/utils";
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  /** Width of the date column (Tailwind class, e.g. "w-16" or "w-24"). */
+  timeWidth: string;
+  /** How many lines of the description to show before clamping. */
+  descriptionLines: 1 | 2;
+  /** Intl date-format options — lets the home page show the year and the
+      blog list show month + day only. */
+  dateFormat?: Intl.DateTimeFormatOptions;
+};
+
+const { post, timeWidth, descriptionLines, dateFormat } = Astro.props;
+const clampClass = descriptionLines === 1 ? "line-clamp-1" : "line-clamp-2";
+---
+
+<li class="border-b border-raised last:border-b-0">
+  <a
+    href={`/posts/${post.id}`}
+    class="group flex items-baseline gap-6 py-4 -mx-3 px-3 hover:bg-raised/40 transition-colors"
+  >
+    <time class:list={["meta shrink-0", timeWidth]}>
+      {formatDate(post.data.date, dateFormat)}
+    </time>
+    <div class="flex-1 min-w-0">
+      <div class="font-display text-xl text-ink group-hover:text-accent leading-snug">
+        {post.data.title}
+      </div>
+      {post.data.description && (
+        <div class:list={["text-lg text-ink/70 mt-1", clampClass]}>
+          {post.data.description}
+        </div>
+      )}
+    </div>
+    <span class="shrink-0 text-accent text-sm opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+  </a>
+</li>

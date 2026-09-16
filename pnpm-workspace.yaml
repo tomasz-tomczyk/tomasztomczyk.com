@@ -1,3 +1,7 @@
+packages:
+  - '.'
+  - '../pressmark/packages/*'
+
 allowBuilds:
   esbuild: true
   sharp: true

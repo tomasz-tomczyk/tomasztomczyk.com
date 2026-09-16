@@ -1,0 +1,19 @@
+---
+import { Topbar, type TopbarItem } from "@pressmark/astro";
+
+type Props = {
+  currentPath?: string;
+};
+
+const { currentPath = "/" } = Astro.props;
+
+// Three destinations. Pressmark's Sidebar rail earns its 260px on sites with
+// many sections; here it was mostly empty, so the Topbar shell fits better.
+const items: TopbarItem[] = [
+  { href: "/", label: "Home" },
+  { href: "/posts", label: "Posts" },
+  { href: "/about", label: "About" },
+];
+---
+
+<Topbar brand="/TT" items={items} currentPath={currentPath} />

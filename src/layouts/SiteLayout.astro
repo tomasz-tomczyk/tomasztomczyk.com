@@ -1,21 +1,71 @@
 ---
 import { BaseLayout } from "@pressmark/astro";
-import TomaszSidebar from "@components/TomaszSidebar.astro";
+import TomaszNav from "@components/TomaszNav.astro";
 import { SITE } from "@consts";
+import { resolveTheme, type PostTheme } from "@lib/postTheme";
 import "@styles/global.css";
 
 type Props = {
   title: string;
   description: string;
+  /** Emit og:type=article instead of the default website (used by posts). */
+  article?: boolean;
+  /** Absolute URL to a cover image; when set, emits og:image and upgrades twitter:card. */
+  image?: string;
+  /**
+   * Per-post look. Re-points Pressmark's colour and font roles on <html>, so
+   * the nav and footer theme along with the article rather than staying cream
+   * around a dark page. Pinned — readers get what the frontmatter says.
+   */
+  theme?: PostTheme;
+  /** Identifies the post in the build error when a theme is unreadable. */
+  themeSource?: string;
 };
 
-const { title, description } = Astro.props;
+const {
+  title,
+  description,
+  article = false,
+  image,
+  theme,
+  themeSource,
+} = Astro.props;
+
 const currentPath = Astro.url.pathname;
 const fullTitle = title === SITE.NAME ? title : `${title} | ${SITE.NAME}`;
+const canonicalURL = new URL(currentPath, Astro.site).href;
+
+// Throws at build time if the post re-points the surface but leaves a text
+// role behind — the failure free-form theming actually produces.
+const resolved = resolveTheme(theme, themeSource ?? currentPath);
+
+const htmlAttrs: Record<string, string | undefined> = {
+  style: resolved.style,
+  "data-scheme": resolved.colorScheme,
+};
 ---
 
-<BaseLayout title={fullTitle} description={description}>
+<BaseLayout title={fullTitle} description={description} htmlAttrs={htmlAttrs}>
   <Fragment slot="head">
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:type" content={article ? "article" : "website"} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={SITE.NAME} />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+
+    {/* Tells the browser to render scrollbars and form controls to match the
+        page, instead of flashing light chrome on a dark post. Derived from the
+        surface colour, not from the reader's preference. */}
+    <meta name="color-scheme" content={resolved.colorScheme} />
+
+    {/* Faces this post asked for, loaded only on this page. */}
+    {resolved.fontUrl && <link rel="stylesheet" href={resolved.fontUrl} />}
+
     <script
       is:inline
       defer
@@ -24,7 +74,10 @@ const fullTitle = title === SITE.NAME ? title : `${title} | ${SITE.NAME}`;
     ></script>
   </Fragment>
 
-  <TomaszSidebar slot="sidebar" currentPath={currentPath} />
+  <TomaszNav currentPath={currentPath} />
 
-  <slot />
+  {/* pt-14 clears the fixed Topbar. */}
+  <main class="pt-14">
+    <slot />
+  </main>
 </BaseLayout>
