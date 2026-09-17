@@ -1,0 +1,126 @@
+---
+/**
+ * The block that marks a post whose subject has stopped — a project no longer
+ * maintained, a guide pinned to versions that have moved on. The post stays at
+ * its URL; this stops a reader arriving cold from search from installing
+ * something that is gone or copying a config that no longer builds.
+ *
+ * Dropped into a post body rather than set in frontmatter, so it can sit where
+ * the author wants it and the explanation can carry a link. It is available to
+ * every `.mdx` post without an import — see the `components` prop on `Content`
+ * in `src/pages/posts/[...slug].astro`.
+ *
+ *   <ArchiveNote title="This article is from 2017.">
+ *     You are probably better off with [Broadway](https://…) now.
+ *   </ArchiveNote>
+ *
+ * The headline and the drawing are the same every time; only the sentence
+ * changes. A long reason and a short one therefore read as the same piece of
+ * furniture rather than as an exception.
+ */
+import IllustratedPanel from "@components/IllustratedPanel.astro";
+import signpost from "../assets/signpost-archived.png";
+
+type Props = {
+  /** Say what has stopped. The default fits a project; an article needs its own. */
+  title?: string;
+  /** When it stopped, if that is known and worth stating. */
+  since?: string;
+};
+
+const { title = "This project is no longer maintained.", since } =
+  Astro.props as Props;
+
+const headingId = `archived-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<IllustratedPanel
+  src={signpost}
+  alt=""
+  role="note"
+  aria-labelledby={headingId}
+  class="archive-note"
+>
+  <h2 id={headingId}>{title}</h2>
+
+  <div class="archive-copy">
+    <slot />
+  </div>
+
+  {since && (
+    <>
+      <hr class="archive-rule" />
+      <p class="archive-coda">Archived {since}</p>
+    </>
+  )}
+</IllustratedPanel>
+
+<style>
+  /* Inside `<Prose class="wide-media">` every child is confined to the measure
+     column unless it asks for the full grid. Harmless outside that grid. */
+  .archive-note {
+    grid-column: 1 / -1;
+    margin-block: 2.5rem;
+  }
+  .archive-note:first-child {
+    margin-top: 0;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.85rem;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  /* The copy arrives from MDX, so it carries the post's scope rather than this
+     component's and has to be reached globally. Prose zeroes paragraph margins
+     for its own flow-spacing owl, which does not reach in here either. */
+  .archive-copy {
+    font-family: var(--font-body);
+    font-size: 19px;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-ink) 88%, var(--color-surface));
+    margin-top: 0.75rem;
+    max-width: 34rem;
+    text-wrap: pretty;
+  }
+  .archive-copy :global(p) {
+    margin: 0;
+  }
+  .archive-copy :global(p + p) {
+    margin-top: 0.7em;
+  }
+  .archive-copy :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .archive-copy :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+  }
+
+  /* The rule marks the turn from the explanation to the date. */
+  .archive-rule {
+    width: 2rem;
+    border: 0;
+    border-top: 2px solid color-mix(in srgb, var(--color-ink) 30%, var(--color-surface));
+    margin: 1.5rem 0 0.9rem;
+  }
+
+  .archive-coda {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-ink) 62%, var(--color-surface));
+    margin: 0;
+  }
+</style>

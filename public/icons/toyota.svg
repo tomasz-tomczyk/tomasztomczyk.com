@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Toyota">
+  <path d="M2 12.2C1.9 7.9 6.5 4.8 12 5C17.8 4.9 22.2 8 22 12.1C22.3 16.1 17.6 19 12.1 18.9C6.4 19.2 1.9 16 2 12.2Z"/>
+  <path d="M8.8 12C8.7 8 10.1 5 12 5C14.1 5.1 15.2 8.4 15.1 12.2C15.2 16 13.9 19 12.1 18.9C10.2 19 8.7 15.8 8.8 12Z"/>
+  <path d="M3.6 8.4C3.4 6.5 7.4 5 12 5C16.6 5.1 20.4 6.5 20.5 8.6C20.4 10.6 16.4 11.8 12.1 11.7C7.5 11.8 3.6 10.4 3.6 8.4Z"/>
+  <path stroke-width=".7" opacity=".45" d="M3.3 13.7c.4 1.4 1.5 2.3 2.8 3"/>
+</svg>

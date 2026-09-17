@@ -1,0 +1,15 @@
+---
+import Icon from "@components/Icon.astro";
+import { iconForLabel } from "@lib/icons";
+
+type Props = {
+  label: string;
+  prefix?: string;
+  size?: number | string;
+};
+
+const { label, prefix = "", size } = Astro.props;
+const icon = iconForLabel(label);
+---
+
+<span>{icon && <Icon name={icon} size={size} class="mr-[0.1em]" />}<slot>{prefix}{label}</slot></span>

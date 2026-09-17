@@ -1,4 +1,6 @@
 ---
+import Icon from "@components/Icon.astro";
+import IconLabel from "@components/IconLabel.astro";
 import { type CollectionEntry, getCollection, render } from "astro:content";
 import { getImage } from "astro:assets";
 import SiteLayout from "@layouts/SiteLayout.astro";
@@ -10,6 +12,7 @@ import {
 } from "@pressmark/astro";
 import AuthorAnnotation from "@components/AuthorAnnotation.astro";
 import PostFooter from "@components/PostFooter.astro";
+import ArchiveNote from "@components/ArchiveNote.astro";
 import { formatDate, readingTime, tagSlug } from "@lib/utils";
 import { AUTHOR } from "@consts";
 
@@ -159,14 +162,14 @@ const hasToc = headings.some((h) => h.depth === 2);
             cannot nest inside its anchor. */}
         <ul class="byline-facts panel-label mt-3.5 sm:ml-[6.5rem] flex flex-wrap items-center gap-x-2.5 gap-y-2 list-none">
           <li class="flex items-center gap-2">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+            <Icon name="calendar" size={13} class="opacity-70" />
             {dateLabel}
           </li>
 
           <li aria-hidden="true" class="byline-sep">&middot;</li>
 
           <li class="flex items-center gap-2">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
+            <Icon name="clock" size={13} class="opacity-70" />
             {minutes}
           </li>
 
@@ -177,7 +180,7 @@ const hasToc = headings.some((h) => h.depth === 2);
                 <a
                   href={`/tags/${tagSlug(tag)}`}
                   class="no-underline hover:text-accent transition-colors"
-                >#{tag}</a>
+                ><IconLabel label={tag} /></a>
               </li>
             </>
           ))}
@@ -188,8 +191,10 @@ const hasToc = headings.some((h) => h.depth === 2);
     {/* No bottom padding: the site footer's own top margin is the only air
         between the foot of a post and the cat. */}
     <div class="px-5 pt-10 md:px-12">
+      {/* MDX posts can use <ArchiveNote> with no import of their own. The
+          dropcap targets the first <p>, so a note above it takes nothing. */}
       <Prose dropcap class="wide-media">
-        <Content />
+        <Content components={{ ArchiveNote }} />
       </Prose>
 
       <PostFooter prev={prev} next={next} />

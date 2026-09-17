@@ -1,4 +1,5 @@
 ---
+import IconLabel from "@components/IconLabel.astro";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import catPortrait from "../assets/tomasz-cat.png";
@@ -32,12 +33,12 @@ const tags = await getTags();
           </h1>
           <div class="prose-pressmark space-y-5">
             <p>
-              I'm a software engineer who loves leading teams and championing people. Recently I've been at <em>Vetspire</em>,
+              I'm a software engineer who loves leading teams and championing people. Recently I've been at <em><IconLabel label="Vetspire" /></em>,
               where I transitioned from Head of Engineering to Staff Engineer, working with a team spread across the US and UK.
             </p>
             <p>
               I'm passionate about Elixir, DevOps, and the practice of leading teams well. From building car-sharing platforms
-              at <em>Toyota Connected</em> to customer-centric work at <em>Vetspire</em>, my focus has always been on delivering
+              at <em><IconLabel label="Toyota Connected" /></em> to customer-centric work at <em><IconLabel label="Vetspire" /></em>, my focus has always been on delivering
               high-quality solutions and helping my team grow.
             </p>
           </div>
@@ -164,7 +165,7 @@ const tags = await getTags();
                         href={`/tags/${tag.slug}`}
                         class="group flex items-baseline justify-between gap-4 py-2.5 text-ink hover:text-accent transition-colors"
                       >
-                        <span class="font-display text-lg">{tag.name}</span>
+                        <span class="font-display text-lg"><IconLabel label={tag.name} /></span>
                         <span class="meta shrink-0">{tag.posts.length}</span>
                       </a>
                     </li>

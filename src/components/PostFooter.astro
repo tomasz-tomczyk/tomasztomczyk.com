@@ -1,4 +1,5 @@
 ---
+import PaperWash from "@components/PaperWash.astro";
 
 type Neighbour = {
   href: string;
@@ -15,13 +16,13 @@ type Props = {
 const { prev, next } = Astro.props as Props;
 
 const doorClass =
-  "door group relative block no-underline rounded-2xl bg-raised/70 px-6 py-5 " +
-  "transition-[transform,background-color] duration-200 " +
-  "hover:-translate-y-0.5 hover:bg-raised focus-visible:-translate-y-0.5 " +
+  "door group relative isolate block no-underline px-6 py-5 " +
+  "transition-transform duration-200 " +
+  "hover:-translate-y-0.5 focus-visible:-translate-y-0.5 " +
   "motion-reduce:transition-none motion-reduce:hover:translate-y-0";
 
 const emptyClass =
-  "rounded-2xl border border-dashed border-line px-6 py-5 flex items-center";
+  "door-empty relative isolate px-6 py-5 flex items-center";
 ---
 
 <div class="mx-auto max-w-measure">
@@ -30,6 +31,8 @@ const emptyClass =
   <nav class="mt-16 grid gap-4 sm:grid-cols-2" aria-label="Nearby posts">
     {prev ? (
       <a href={prev.href} class={doorClass}>
+        <PaperWash scale={11} seed={3} />
+
         <span class="panel-label block">Previous</span>
 
         <span class="relative mt-2 block font-display text-xl leading-snug text-ink transition-colors group-hover:text-accent">
@@ -55,6 +58,8 @@ const emptyClass =
       </a>
     ) : (
       <div class={emptyClass}>
+        <PaperWash scale={11} seed={21} />
+
         <p class="m-0 font-display italic text-lg leading-snug text-ink/70">
           Nothing before this one. It is where the blog starts.
         </p>
@@ -63,6 +68,8 @@ const emptyClass =
 
     {next ? (
       <a href={next.href} class={doorClass}>
+        <PaperWash scale={11} seed={12} />
+
         <span class="panel-label block">Next</span>
 
         <span class="relative mt-2 block font-display text-xl leading-snug text-ink transition-colors group-hover:text-accent">
@@ -85,6 +92,8 @@ const emptyClass =
       </a>
     ) : (
       <div class={emptyClass}>
+        <PaperWash scale={11} seed={30} />
+
         <p class="m-0 font-display italic text-lg leading-snug text-ink/70">
           This is the newest thing here. You have caught up.
         </p>
@@ -100,6 +109,20 @@ const emptyClass =
 </div>
 
 <style>
+  /* The torn sheets carry the panels now, so a door is paper on paper: it
+     lightens on hover rather than filling. An empty panel is the same sheet
+     with less ink in it — nothing is there to open. */
+  .door {
+    --wash: color-mix(in srgb, var(--color-raised) 82%, var(--color-surface));
+  }
+  .door:hover,
+  .door:focus-visible {
+    --wash: var(--color-raised);
+  }
+  .door-empty {
+    --wash: color-mix(in srgb, var(--color-raised) 45%, var(--color-surface));
+  }
+
   .squiggle {
     position: absolute;
     left: 0;

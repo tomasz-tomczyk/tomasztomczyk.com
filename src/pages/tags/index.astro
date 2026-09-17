@@ -1,4 +1,5 @@
 ---
+import IconLabel from "@components/IconLabel.astro";
 import SiteLayout from "@layouts/SiteLayout.astro";
 import { getTags } from "@lib/tags";
 
@@ -10,7 +11,7 @@ const tags = await getTags();
   description="Every topic written about here, and how much of it there is."
 >
   <div class="px-5 py-10 md:px-12">
-    <div class="mx-auto max-w-[46rem]">
+    <div class="mx-auto max-w-measure-wide">
       <header class="mb-12">
         <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em]">
           Tags.
@@ -28,7 +29,7 @@ const tags = await getTags();
                 class="group flex items-baseline gap-6 py-4 -mx-3 px-3 hover:bg-raised/40 transition-colors"
               >
                 <span class="flex-1 min-w-0 font-display text-xl text-ink group-hover:text-accent leading-snug">
-                  {tag.name}
+                  <IconLabel label={tag.name} />
                 </span>
                 <span class="meta shrink-0">
                   {tag.posts.length} {tag.posts.length === 1 ? "post" : "posts"}

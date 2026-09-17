@@ -1,13 +1,16 @@
 ---
+import Icon from "@components/Icon.astro";
+import IconLabel from "@components/IconLabel.astro";
 import SiteLayout from "@layouts/SiteLayout.astro";
 import { DetailList, PanelLabel } from "@pressmark/astro";
 import AuthorAnnotation from "@components/AuthorAnnotation.astro";
+import IllustratedPanel from "@components/IllustratedPanel.astro";
+import cvDesk from "../assets/cv-desk.png";
 import {
   SITE,
   SOCIALS,
   ABOUT,
   ABOUT_NOTE,
-  ROLES,
   CURRENTLY,
   COLOPHON,
 } from "@consts";
@@ -21,7 +24,7 @@ const links = [
     external: false,
   },
   ...SOCIALS.map((social) => ({
-    ...(ICONS[social.NAME] ?? { label: social.NAME, path: "" }),
+    ...(ICONS[social.NAME] ?? { label: social.NAME, icon: undefined }),
     value: social.HANDLE,
     href: social.HREF,
     external: true,
@@ -118,7 +121,18 @@ const colophon = COLOPHON.map((entry) => ({
         <aside class="col-span-1 md:col-span-5 lg:col-span-4 space-y-10 md:pt-2">
           <div>
             <PanelLabel class="mb-3">Currently</PanelLabel>
-            <DetailList items={currently} labelWidth="4rem" />
+            <dl class="flex flex-col gap-2.5">
+              {currently.map((item) => (
+                <div class="flex items-baseline gap-3">
+                  <dt class="panel-label shrink-0 w-16">{item.label}</dt>
+                  <dd class="text-ink leading-snug m-0">
+                    {item.value.split(/(Vetspire)/).map((part) => (
+                      <IconLabel label={part} />
+                    ))}
+                  </dd>
+                </div>
+              ))}
+            </dl>
             <p class="mt-3 meta">True as of {CURRENTLY.UPDATED}.</p>
           </div>
 
@@ -130,16 +144,7 @@ const colophon = COLOPHON.map((entry) => ({
               {links.map((link) => (
                 <li class="flex items-baseline justify-between gap-4 border-b border-raised py-3">
                   <span class="flex items-baseline gap-2.5 shrink-0">
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      aria-hidden="true"
-                      class="shrink-0 translate-y-[0.15em] text-ink/70"
-                    >
-                      <path d={link.path} />
-                    </svg>
+                    {link.icon && <Icon name={link.icon} size={15} class="text-ink/70" />}
                     <span class="font-display text-lg text-ink">
                       {link.label}
                     </span>
@@ -160,28 +165,26 @@ const colophon = COLOPHON.map((entry) => ({
         </aside>
       </section>
 
-      <section class="mb-16 md:mb-24">
-        <PanelLabel class="mb-5">Work</PanelLabel>
-        <ul class="border-t border-raised">
-          {ROLES.map((role) => (
-            <li class="grid grid-cols-1 md:grid-cols-12 gap-x-10 gap-y-2 border-b border-raised py-6">
-              <div class="md:col-span-3">
-                <span class="meta">{role.PERIOD}</span>
-              </div>
-              <div class="md:col-span-9">
-                <p class="font-display text-xl md:text-2xl text-ink leading-snug">
-                  {role.TITLE} <span class="text-ink/40">·</span> {role.ORG}
-                </p>
-                <p class="mt-2 text-ink/80 leading-relaxed max-w-[42rem]">
-                  {role.NOTE}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/* The whole history lives on /cv; this is a signpost, not a summary.
+          The drawing is on the right so the link, not the illustration, is
+          what the eye reaches at the end of the line. */}
+      <IllustratedPanel
+        src={cvDesk}
+        alt=""
+        side="right"
+        artWidth="11rem"
+        seed={19}
+        class="mb-16 md:mb-24"
+      >
+        <h2>Looking for my CV?</h2>
+        <p class="cv-link">
+          <a href="/cv">Read the CV &rarr;</a>
+        </p>
+      </IllustratedPanel>
 
-      <section class="border-t border-raised pt-10">
+      {/* No rule above this one: it follows the torn sheet, and a hairline
+          under a deckled edge reads as a border on the sheet. */}
+      <section class="pt-10">
         <PanelLabel class="mb-6">Colophon</PanelLabel>
         <DetailList
           items={colophon}
@@ -192,3 +195,31 @@ const colophon = COLOPHON.map((entry) => ({
     </div>
   </div>
 </SiteLayout>
+
+<style>
+  /* Slotted into IllustratedPanel, so these sit in this page's scope. */
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.85rem;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .cv-link {
+    margin: 0.7rem 0 0;
+  }
+  .cv-link a {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .cv-link a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

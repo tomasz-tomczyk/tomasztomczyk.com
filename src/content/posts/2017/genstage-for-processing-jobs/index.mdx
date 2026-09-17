@@ -5,10 +5,14 @@ date: "Jan 17 2017"
 tags: ["elixir"]
 ---
 
-Note: this article is from 2017. Nowadays, you're probably better off using [Broadway](https://github.com/dashbitco/broadway).
+<ArchiveNote title="This article is from 2017.">
 
----
+GenStage still works the way it is described here, and the back-pressure
+reasoning holds. But for a job pipeline you are probably better off with
+[Broadway](https://github.com/dashbitco/broadway), which wraps this pattern and
+handles batching, rate limiting and acknowledgement for you.
 
+</ArchiveNote>
 We use Elixir at uSwitch to process user-submitted forms, sending the data to a 3rd party API and parsing the output saving the results to a database. The high-level outline of the Elixir process as a recursive loop looks like this:
 
 1. Long-running SQS request, as soon as a message is available, the request returns

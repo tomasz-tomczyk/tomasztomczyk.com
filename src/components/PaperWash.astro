@@ -1,0 +1,69 @@
+---
+/**
+ * A torn paper ground: a flat fill with a deckled edge and two grades of
+ * pigment noise. Sits behind its parent's content as two absolute layers, so
+ * the parent needs `position: relative` and `isolation: isolate`.
+ *
+ * The parent also owns the colour, via `--wash` (default: the `raised` token).
+ *
+ * `feDisplacementMap` distorts whatever it filters, so type can never share a
+ * layer with the edge — that is why this is two elements and not a background
+ * on the parent.
+ */
+type Props = {
+  /**
+   * How far the edge tears, in px. Scale it to the element: 26 reads as a
+   * hand-torn sheet on a full-width panel and as damage on a small card.
+   */
+  scale?: number;
+  /** Seed for the edge noise — vary it so repeated cards are not identical. */
+  seed?: number;
+};
+
+const { scale = 26, seed = 7 } = Astro.props as Props;
+
+// One page can hold several of these, and an SVG filter id is document-global.
+const id = `deckle-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" class="defs">
+  <filter id={id} x="-8%" y="-20%" width="116%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.014 0.03" numOctaves="4" seed={seed} result="noise" />
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale={scale} xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
+<span class="wash" aria-hidden="true" style={`filter: url(#${id})`}></span>
+<span class="grain" aria-hidden="true" style={`filter: url(#${id})`}></span>
+
+<style>
+  .defs {
+    position: absolute;
+  }
+
+  .wash,
+  .grain {
+    position: absolute;
+    inset: 0;
+    display: block;
+    z-index: -1;
+  }
+
+  .wash {
+    background: var(--wash, var(--color-raised));
+  }
+
+  /* Two turbulences, not a gradient: the coarse one pools pigment in uneven
+     patches the way a wet wash dries, the fine one is paper tooth. Each carries
+     its own opacity inside the SVG, so one layer does both, and each is
+     desaturated — feTurbulence emits colour noise, which multiplies into green
+     and pink blotches. Multiply keeps them in the wash rather than hazing the
+     type above. */
+  .grain {
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)' opacity='0.55'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.35'/%3E%3C/svg%3E");
+    opacity: 0.22;
+    mix-blend-mode: multiply;
+  }
+</style>

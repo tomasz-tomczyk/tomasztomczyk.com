@@ -1,13 +1,29 @@
 ---
+import Icon from "@components/Icon.astro";
 import { Image } from "astro:assets";
 import { SITE, SOCIALS } from "@consts";
 import { SOCIAL_ICONS as ICONS } from "@lib/socialIcons";
+import catCurled from "../assets/cat-curled.png";
 import catLounging from "../assets/cat-lounging.png";
+import catSitting from "../assets/cat-sitting.png";
+import catSlouching from "../assets/cat-slouching.png";
+
+// Every source is trimmed to the cat and scaled to a common 400px height, so
+// the sizing below can be by height and each pose reads at the same scale
+// however wide it happens to be.
+const cats = [
+  { src: catCurled, alt: "My cat Dr Harvey Cinnamon, curled up asleep" },
+  { src: catLounging, alt: "My cat Dr Harvey Cinnamon, lounging" },
+  { src: catSitting, alt: "My cat Dr Harvey Cinnamon, sitting to attention" },
+  { src: catSlouching, alt: "My cat Dr Harvey Cinnamon, slouching and unimpressed" },
+];
+
+const cat = cats[Math.floor(Math.random() * cats.length)];
 
 const year = new Date().getFullYear();
 
 const links = SOCIALS.map((social) => ({
-  ...(ICONS[social.NAME] ?? { label: social.NAME, path: "" }),
+  ...(ICONS[social.NAME] ?? { label: social.NAME, icon: undefined }),
   href: social.HREF,
 }));
 ---
@@ -16,20 +32,21 @@ const links = SOCIALS.map((social) => ({
     this element, and the figure is pulled up by half its own height so the
     hairline passes behind the body and reads as a shelf. Negative margin on
     the figure, not a transform, so the footer's own box still reserves the
-    space the overhang needs. */}
+    space the overhang needs. The offsets are half of h-24 / h-32 and must
+    follow if those change. The pose is picked at build time, so a page keeps
+    one cat and no layout shifts on load. */}
 <footer class="mt-14 md:mt-20 border-t border-raised">
   <div class="px-5 md:px-12">
     <div class="mx-auto max-w-measure-wide">
-      <figure class="m-0 -mt-[3.25rem] md:-mt-[4.25rem] mb-6 md:mb-8 flex justify-end">
+      <figure class="m-0 -mt-12 md:-mt-16 mb-6 md:mb-8 flex justify-end">
         <Image
-          src={catLounging}
-          alt="My cat Dr Harvey Cinnamon"
-          widths={[200, 400]}
-          sizes="(min-width: 768px) 15rem, 11rem"
+          src={cat.src}
+          alt={cat.alt}
+          height={256}
           format="webp"
           quality={72}
           loading="lazy"
-          class="block w-44 md:w-60 h-auto"
+          class="block h-24 md:h-32 w-auto"
         />
       </figure>
 
@@ -52,15 +69,7 @@ const links = SOCIALS.map((social) => ({
                   class="block text-ink/60 hover:text-accent transition-colors"
                 >
                   <span class="sr-only">{link.label}</span>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d={link.path} />
-                  </svg>
+                  {link.icon && <Icon name={link.icon} size={18} class="block" />}
                 </a>
               </li>
             ))

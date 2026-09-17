@@ -1,0 +1,167 @@
+---
+import IconLabel from "@components/IconLabel.astro";
+import SiteLayout from "@layouts/SiteLayout.astro";
+import { PanelLabel } from "@pressmark/astro";
+import {
+  SITE,
+  CV,
+  CV_ROLE,
+  CV_LOCATION,
+  CV_SUMMARY,
+  CV_SUMMARY_PROJECT,
+  CV_EXPERIENCE,
+  CV_EARLIER,
+  CV_PROJECTS,
+  CV_EDUCATION,
+  CV_SKILLS,
+} from "@consts";
+---
+
+<SiteLayout title={CV.TITLE} description={CV.DESCRIPTION}>
+  <div class="px-5 py-10 md:px-12">
+    <div class="mx-auto max-w-measure-wide">
+      <header class="mb-14 md:mb-20">
+        <PanelLabel class="mb-4">{CV.TITLE}</PanelLabel>
+        <h1
+          class="font-display font-light text-4xl md:text-5xl lg:text-6xl leading-[1.02] tracking-[-0.018em] text-ink"
+        >
+          Tomasz Tomczyk.
+        </h1>
+        <p
+          class="mt-4 font-display italic text-xl md:text-2xl leading-snug text-muted"
+        >
+          {CV_ROLE} · {CV_LOCATION}
+        </p>
+        <p class="meta mt-5">
+          <a
+            href={`mailto:${SITE.EMAIL}`}
+            class="text-accent hover:underline hover:underline-offset-4"
+          >
+            {SITE.EMAIL}
+          </a>
+        </p>
+      </header>
+
+      <section class="mb-16 md:mb-24">
+        <PanelLabel class="mb-5">Summary</PanelLabel>
+        <div class="prose-pressmark">
+          {CV_SUMMARY.map((paragraph) => <p>{paragraph}</p>)}
+          <p>
+            {CV_SUMMARY_PROJECT.BEFORE}
+            <a href={CV_SUMMARY_PROJECT.LINK.HREF}>
+              {CV_SUMMARY_PROJECT.LINK.LABEL}
+            </a>
+            {CV_SUMMARY_PROJECT.AFTER}
+          </p>
+        </div>
+      </section>
+
+      {/* One <li> per employer: the company is named once, in the left column,
+          and its roles stack in the right. */}
+      <section class="mb-16 md:mb-24">
+        <PanelLabel class="mb-5">Experience</PanelLabel>
+        <ul class="border-t border-raised">
+          {CV_EXPERIENCE.map((company) => (
+            <li class="grid grid-cols-1 md:grid-cols-12 gap-x-10 gap-y-3 border-b border-raised py-7">
+              <div class="md:col-span-3">
+                <p class="font-display text-xl md:text-2xl text-ink leading-snug">
+                  <IconLabel label={company.ORG} />
+                </p>
+                <p class="meta mt-1">{company.LOCATION}</p>
+              </div>
+              <div class="md:col-span-9 space-y-6">
+                {company.POSITIONS.map((position) => (
+                  <div>
+                    <p class="font-display text-lg md:text-xl text-ink leading-snug">
+                      {position.TITLE}
+                      <span class="mx-1.5 text-ink/30">·</span>
+                      <span class="meta">{position.PERIOD}</span>
+                    </p>
+                    {position.NOTES.map((note) => (
+                      <p class="mt-1.5 text-ink/80 leading-relaxed max-w-[42rem]">
+                        {note.split(/(Vetspire|Toyota|uSwitch)/).map((part) => <IconLabel label={part} />)}
+                      </p>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <ul class="mt-8">
+          {CV_EARLIER.map((role) => (
+            <li class="grid grid-cols-1 md:grid-cols-12 gap-x-10 gap-y-1 border-b border-raised py-5 last:border-b-0">
+              <div class="md:col-span-3">
+                <p class="font-display text-lg text-ink leading-snug">
+                  {role.ORG}
+                </p>
+                <p class="meta mt-1">{role.PERIOD}</p>
+              </div>
+              <p class="md:col-span-9 text-ink/80 leading-relaxed max-w-[42rem]">
+                <span class="text-ink">{role.TITLE}</span>
+                <span class="mx-1.5 text-ink/30">—</span>
+                {role.NOTE}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="mb-16 md:mb-24">
+        <PanelLabel class="mb-5">Projects</PanelLabel>
+        <ul class="border-t border-raised">
+          {CV_PROJECTS.map((project) => (
+            <li class="grid grid-cols-1 md:grid-cols-12 gap-x-10 gap-y-3 border-b border-raised py-7">
+              <div class="md:col-span-3">
+                <p class="font-display text-xl md:text-2xl text-ink leading-snug">
+                  <a
+                    href={project.HREF}
+                    class="hover:text-accent transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {project.NAME}
+                  </a>
+                </p>
+                <p class="meta mt-1">{project.LABEL}</p>
+                <p class="meta">{project.PERIOD}</p>
+              </div>
+              <p class="md:col-span-9 text-ink/80 leading-relaxed max-w-[42rem]">
+                {project.NOTE}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="mb-16 md:mb-24">
+        <PanelLabel class="mb-5">Education</PanelLabel>
+        <p class="font-display text-xl md:text-2xl text-ink leading-snug">
+          {CV_EDUCATION.SCHOOL}
+        </p>
+        <p class="mt-1.5 text-ink/80 leading-relaxed">{CV_EDUCATION.DETAIL}</p>
+      </section>
+
+      <section class="border-t border-raised pt-10">
+        <PanelLabel class="mb-5">Skills</PanelLabel>
+        <ul class="flex flex-wrap gap-2 list-none p-0 m-0">
+          {CV_SKILLS.map((skill) => (
+            <li class="rounded-full bg-raised px-3 py-1 meta text-ink/80">
+              {skill}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <p class="meta mt-14 pt-6 border-t border-line">
+        <a
+          href="/about"
+          class="text-accent hover:underline hover:underline-offset-4"
+        >
+          ← About
+        </a>
+      </p>
+    </div>
+  </div>
+</SiteLayout>

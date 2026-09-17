@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Vetspire">
+  <path fill="currentColor" fill-opacity=".08" d="M2.6 10.4 5.2 2.7 12 10.9 18.7 2.6 21.5 10.5 12.1 21.4Z"/>
+  <path d="M2.6 10.4C3.2 8 4.5 4.7 5.2 2.7L12 10.9 18.7 2.6C19.8 5.4 20.5 8 21.5 10.5L12.1 21.4Z"/>
+  <path stroke-width="1.2" d="m12 10.9-4.3 5.6 8.5.2-4.2-5.8"/>
+  <path stroke-width=".8" opacity=".55" d="m4.2 10.1 1.6-1.3m-.8 3 1.8-1.5m9.1 8.7-1.9.1"/>
+</svg>

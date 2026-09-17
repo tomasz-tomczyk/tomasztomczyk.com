@@ -1,0 +1,32 @@
+---
+import { iconMarkup, type IconName } from "@lib/icons";
+
+type Props = {
+  name: IconName;
+  size?: number | string;
+  class?: string;
+  title?: string;
+};
+
+const { name, size = "1em", class: className, title } = Astro.props;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  class:list={["blog-icon", className]}
+  aria-hidden={title ? undefined : "true"}
+  role={title ? "img" : undefined}
+  aria-label={title}
+  set:html={iconMarkup(name)}
+/>
+
+<style>
+  .blog-icon {
+    display: inline-block;
+    vertical-align: -0.15em;
+    flex-shrink: 0;
+  }
+</style>

@@ -1,0 +1,112 @@
+---
+/**
+ * A torn sheet with an illustration on one side and slotted copy on the other.
+ *
+ * Slotted content keeps the calling component's style scope, so each caller
+ * sets its own type and the panel only owns the ground and the grid.
+ */
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import type { HTMLAttributes } from "astro/types";
+import PaperWash from "@components/PaperWash.astro";
+
+type Props = HTMLAttributes<"aside"> & {
+  src: ImageMetadata;
+  /** Empty when the copy beside it already says what the drawing says. */
+  alt: string;
+  /** Which side the illustration sits on. */
+  side?: "left" | "right";
+  /** Width of the illustration column. Shrink it when the copy is one line. */
+  artWidth?: string;
+  seed?: number;
+  class?: string;
+};
+
+const {
+  src,
+  alt,
+  side = "left",
+  artWidth = "15rem",
+  seed = 7,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<aside
+  class:list={["panel", side === "right" && "reverse", className]}
+  style={`--art: ${artWidth}`}
+  {...rest}
+>
+  <PaperWash scale={26} seed={seed} />
+
+  <div class="panel-body">
+    <Image
+      src={src}
+      alt={alt}
+      widths={[560, 840]}
+      sizes="(min-width: 900px) 15rem, 11rem"
+      class="panel-art"
+      loading="lazy"
+    />
+
+    <div class="panel-copy">
+      <slot />
+    </div>
+  </div>
+</aside>
+
+<style>
+  .panel {
+    /* `raised` is the card ground and `line` the step below it, so the sheet
+       separates from the page by the same amount any panel does, and the wash's
+       noise pools it towards `line`. */
+    --wash: var(--color-raised);
+
+    position: relative;
+    max-width: var(--container-measure-wide);
+    margin: 3.5rem auto 0;
+    isolation: isolate;
+  }
+
+  /* The deckle displaces the edge by up to 26px, so the padding has to clear
+     the tear before it can be trimmed any further. */
+  .panel-body {
+    display: grid;
+    gap: 1rem 2rem;
+    align-items: center;
+    padding: 1.75rem 1.5rem;
+  }
+
+  @media (min-width: 900px) {
+    .panel-body {
+      grid-template-columns: var(--art) 1fr;
+      gap: 2.25rem;
+      padding: 1.9rem 2.25rem;
+    }
+
+    /* Order rather than direction: the drawing stays the first thing in the
+       DOM, so it is also the first thing a screen reader skips. */
+    .reverse .panel-body {
+      grid-template-columns: 1fr var(--art);
+    }
+    .reverse .panel-art {
+      order: 2;
+    }
+  }
+
+  /* Inside a post the panel sits in the prose flow, where images carry a
+     1.6em block margin. Here it only inflates the panel. */
+  .panel-art {
+    width: 11rem;
+    height: auto;
+    margin: 0;
+    justify-self: center;
+  }
+
+  @media (min-width: 900px) {
+    .panel-art {
+      width: 100%;
+    }
+  }
+</style>

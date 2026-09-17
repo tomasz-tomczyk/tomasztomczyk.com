@@ -79,18 +79,142 @@ export const COLOPHON = [
   { LABEL: "Analytics", VALUE: "Umami — no cookies, nothing personal" },
 ] as const;
 
-/** Where I've worked. Rendered on /about. */
-export const ROLES = [
+/** Page copy and headings for /cv. */
+export const CV: Metadata = {
+  TITLE: "CV",
+  DESCRIPTION:
+    "Tomasz Tomczyk — Engineering Leader. Fifteen years of engineering, the teams, and the work behind them.",
+};
+
+/**
+ * The CV, verbatim from the source of truth in ../cv/index.html. Change it
+ * there first, then mirror it here — the two are meant to read identically.
+ */
+export const CV_ROLE = "Engineering Leader";
+export const CV_LOCATION = "Croydon, United Kingdom";
+
+export const CV_SUMMARY = [
+  "I am a pragmatic, product-focused engineer with over 15 years’ experience. I’m comfortable owning ambiguous problems end to end: leading products and teams, making difficult decisions and coordinating incident response when things go wrong. I love growing teams and people in cross-functional, highly autonomous environments while continuously learning and iterating.",
+] as const;
+
+/** The second summary paragraph carries a link, so it is rendered by hand. */
+export const CV_SUMMARY_PROJECT = {
+  BEFORE: "In spare time, I build ",
+  LINK: { LABEL: "Crit", HREF: "https://crit.md" },
+  AFTER: ", a review tool for iterating on agent output used by engineers daily.",
+} as const;
+
+/**
+ * Where I've worked, newest first. Grouped by employer, with one POSITIONS
+ * entry per role so a promotion keeps its own dates and its own paragraphs.
+ * SUMMARY companies are the short, one-line entries under "Earlier".
+ */
+export const CV_EXPERIENCE = [
   {
     ORG: "Vetspire",
-    TITLE: "Staff Engineer",
-    PERIOD: "2021 — present",
-    NOTE: "Previously Head of Engineering. Elixir, Phoenix, and GraphQL at scale, with a team across the US and UK.",
+    LOCATION: "Remote",
+    POSITIONS: [
+      {
+        TITLE: "Staff Engineer",
+        PERIOD: "May 2024 - Present",
+        NOTES: [
+          "Solving difficult technical challenges across the organisation: strengthening security across the codebase to enable successful customer audits, reducing DB CPU from ~99% to ~40% and setting the technical direction for the product. Helped retain key accounts by resolving their most critical product issues.",
+        ],
+      },
+      {
+        TITLE: "Head of Engineering",
+        PERIOD: "September 2021 - August 2024",
+        NOTES: [
+          "Grew and directly managed the engineering team from 3 to 12, distributed between the US and UK.",
+          "Developed and promoted two senior engineers into Tech Lead roles.",
+          "Led two reorganisations as the company evolved, steering it towards autonomous, cross-functional product teams.",
+          "Advised on architecture, mentored colleagues and remained hands-on for about 50% of my time.",
+        ],
+      },
+      {
+        TITLE: "Senior Software Engineer",
+        PERIOD: "October 2020 - September 2021",
+        NOTES: [
+          "Built customer-centric features, working directly with enterprise customers to understand their requirements and iterate on solutions.",
+        ],
+      },
+    ],
   },
   {
-    ORG: "Toyota Connected",
-    TITLE: "Senior Software Engineer",
-    PERIOD: "2018 — 2021",
-    NOTE: "Car-sharing and mobility platforms.",
+    ORG: "Toyota Connected Europe",
+    LOCATION: "London, UK",
+    POSITIONS: [
+      {
+        TITLE: "Senior Software Engineer",
+        PERIOD: "November 2018 - July 2020",
+        NOTES: [
+          "Led a team delivering an Elixir-based car-sharing platform for international Toyota markets. Helped shape product direction, owned relationships with clients and partners and represented the technical voice of the team within the wider business.",
+          "In the absence of CTO/VPE roles at the company, supported the growth of engineers on the team by conducting regular 1on1s, facilitating feedback and planning professional development. I also led the recruitment process and engineering interviews.",
+          "Worked hands-on with Phoenix/Absinthe APIs and managed DevOps, including Kubernetes deployments, CI/CD automation and cloud infrastructure.",
+        ],
+      },
+    ],
   },
+  {
+    ORG: "uSwitch.com",
+    LOCATION: "London, UK",
+    POSITIONS: [
+      {
+        TITLE: "Lead Software Engineer",
+        PERIOD: "August 2017 - October 2018",
+        NOTES: [
+          "Led product delivery and technical direction for a cross-functional team, line-managing three developers, an analyst and a UX designer. Worked hands-on with Elixir, Rails and React.js, delivering new features and A/B tests that grew the team's revenue.",
+        ],
+      },
+      {
+        TITLE: "Senior Developer",
+        PERIOD: "November 2012 - August 2017",
+        NOTES: [
+          "Led full-stack and DevOps projects, introduced Elixir to the company and used A/B testing to deliver statistically significant improvements in conversion.",
+        ],
+      },
+    ],
+  },
+] as const;
+
+export const CV_EARLIER = [
+  {
+    ORG: "Streaming Tank",
+    PERIOD: "August 2012 - October 2012",
+    TITLE: "Senior Developer",
+    NOTE: "Built a live-commerce SPA and mentored junior developers.",
+  },
+  {
+    ORG: "Cyber-Duck",
+    PERIOD: "August 2010 - July 2012",
+    TITLE: "Senior Developer",
+    NOTE: "Delivered full-stack projects and supported client pitches.",
+  },
+] as const;
+
+export const CV_PROJECTS = [
+  {
+    NAME: "Crit",
+    HREF: "https://crit.md",
+    LABEL: "crit.md",
+    PERIOD: "February 2026 - Present",
+    NOTE: "A local-first review tool for reviewing and iterating on coding-agent output. It supports browser-based, line-specific feedback across plans, code changes, running applications and HTML artefacts. It has 700+ GitHub stars and is used by engineers at Spotify, Figma, Fastly, Forter, Datadog and more.",
+  },
+] as const;
+
+export const CV_EDUCATION = {
+  SCHOOL: "University of Bedfordshire",
+  DETAIL: "Bachelor's degree in Computer Science · First Class · 2007 - 2010",
+} as const;
+
+export const CV_SKILLS = [
+  "Elixir",
+  "Kubernetes",
+  "AWS",
+  "GCP",
+  "Agentic Workflows",
+  "React",
+  "TypeScript",
+  "Ruby",
+  "PHP",
 ] as const;
