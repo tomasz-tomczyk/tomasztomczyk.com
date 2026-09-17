@@ -51,7 +51,10 @@ jobs:
           # path: . # The root location of your Astro project inside the repository. (optional)
           # Pinned rather than left to the action, which now defaults to 24.
           node-version: 22
-          package-manager: pnpm@latest # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
+          # No version here. pnpm/action-setup fails outright if a version is
+          # given while package.json carries a `packageManager` field, and that
+          # field is what pins pnpm for everyone locally.
+          package-manager: pnpm
 
   deploy:
     needs: build
