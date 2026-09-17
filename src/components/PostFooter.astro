@@ -1,0 +1,150 @@
+---
+
+type Neighbour = {
+  href: string;
+  title: string;
+  date: string;
+  minutes: string;
+};
+
+type Props = {
+  prev?: Neighbour;
+  next?: Neighbour;
+};
+
+const { prev, next } = Astro.props as Props;
+
+const doorClass =
+  "door group relative block no-underline rounded-2xl bg-raised/70 px-6 py-5 " +
+  "transition-[transform,background-color] duration-200 " +
+  "hover:-translate-y-0.5 hover:bg-raised focus-visible:-translate-y-0.5 " +
+  "motion-reduce:transition-none motion-reduce:hover:translate-y-0";
+
+const emptyClass =
+  "rounded-2xl border border-dashed border-line px-6 py-5 flex items-center";
+---
+
+<div class="mx-auto max-w-measure">
+  {/* The whole foot draws no rules: the panels do the separating, and the
+      article's last line is the only thing that ends the post. */}
+  <nav class="mt-16 grid gap-4 sm:grid-cols-2" aria-label="Nearby posts">
+    {prev ? (
+      <a href={prev.href} class={doorClass}>
+        <span class="panel-label block">Previous</span>
+
+        <span class="relative mt-2 block font-display text-xl leading-snug text-ink transition-colors group-hover:text-accent">
+          {prev.title}
+          {/* Drawn under the title on hover, revealed by a clip rather than a
+              dash offset: the viewBox is stretched to the title's width, which
+              makes pathLength dashes uneven. */}
+          <svg
+            class="squiggle"
+            viewBox="0 0 84 9"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path d="M0 4.5c14-4 28 3 42-.5s28-3.5 42 1" />
+          </svg>
+        </span>
+
+        <span class="meta mt-3 block">{prev.date} &middot; {prev.minutes}</span>
+
+        <span
+          class="arrow arrow-back meta absolute right-5 bottom-5 text-accent"
+          aria-hidden="true">&larr;</span>
+      </a>
+    ) : (
+      <div class={emptyClass}>
+        <p class="m-0 font-display italic text-lg leading-snug text-ink/70">
+          Nothing before this one. It is where the blog starts.
+        </p>
+      </div>
+    )}
+
+    {next ? (
+      <a href={next.href} class={doorClass}>
+        <span class="panel-label block">Next</span>
+
+        <span class="relative mt-2 block font-display text-xl leading-snug text-ink transition-colors group-hover:text-accent">
+          {next.title}
+          <svg
+            class="squiggle"
+            viewBox="0 0 84 9"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path d="M0 4.5c14-4 28 3 42-.5s28-3.5 42 1" />
+          </svg>
+        </span>
+
+        <span class="meta mt-3 block">{next.date} &middot; {next.minutes}</span>
+
+        <span
+          class="arrow arrow-fwd meta absolute right-5 bottom-5 text-accent"
+          aria-hidden="true">&rarr;</span>
+      </a>
+    ) : (
+      <div class={emptyClass}>
+        <p class="m-0 font-display italic text-lg leading-snug text-ink/70">
+          This is the newest thing here. You have caught up.
+        </p>
+      </div>
+    )}
+  </nav>
+
+  <footer class="meta mt-12 text-center">
+    <a href="/posts" class="text-accent hover:underline hover:underline-offset-4"
+      >&larr; All posts</a
+    >
+  </footer>
+</div>
+
+<style>
+  .squiggle {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    height: 0.5rem;
+    overflow: visible;
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .door:hover .squiggle,
+  .door:focus-visible .squiggle {
+    clip-path: inset(0 0 0 0);
+  }
+
+  /* The arrow is the only thing that moves outward — it says which way the
+     door opens. Touch never hovers, so it rests half-visible there. */
+  .arrow {
+    opacity: 0.45;
+    transition:
+      opacity 0.2s,
+      transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .door:hover .arrow,
+  .door:focus-visible .arrow {
+    opacity: 1;
+  }
+  .door:hover .arrow-fwd,
+  .door:focus-visible .arrow-fwd {
+    transform: translateX(3px);
+  }
+  .door:hover .arrow-back,
+  .door:focus-visible .arrow-back {
+    transform: translateX(-3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .squiggle,
+    .arrow {
+      transition: none;
+    }
+  }
+</style>
+

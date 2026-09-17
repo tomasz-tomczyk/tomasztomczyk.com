@@ -5,11 +5,11 @@ import SiteLayout from "@layouts/SiteLayout.astro";
 import {
   Prose,
   TableOfContents,
-  PostNav,
   Hero,
   AuthorCard,
 } from "@pressmark/astro";
 import AuthorAnnotation from "@components/AuthorAnnotation.astro";
+import PostFooter from "@components/PostFooter.astro";
 import { formatDate, readingTime, tagSlug } from "@lib/utils";
 import { AUTHOR } from "@consts";
 
@@ -34,7 +34,14 @@ const { post, newer, older } = Astro.props;
 const { Content, headings } = await render(post);
 
 const toItem = (p?: CollectionEntry<"posts">) =>
-  p ? { href: `/posts/${p.id}`, title: p.data.title } : undefined;
+  p
+    ? {
+        href: `/posts/${p.id}`,
+        title: p.data.title,
+        date: formatDate(p.data.date),
+        minutes: readingTime(p.body ?? ""),
+      }
+    : undefined;
 const prev = toItem(older);
 const next = toItem(newer);
 
@@ -178,17 +185,14 @@ const hasToc = headings.some((h) => h.depth === 2);
       </div>
     </div>
 
-    <div class="px-5 py-10 md:px-12">
+    {/* No bottom padding: the site footer's own top margin is the only air
+        between the foot of a post and the cat. */}
+    <div class="px-5 pt-10 md:px-12">
       <Prose dropcap class="wide-media">
         <Content />
       </Prose>
 
-      <PostNav prev={prev} next={next} class="mx-auto max-w-measure mt-12" />
-
-      <footer class="meta mx-auto mt-12 pt-6 border-t border-line max-w-measure flex items-center justify-between">
-        <a href="/posts" class="text-accent hover:underline hover:underline-offset-4">← All posts</a>
-        <span>{dateLabel}</span>
-      </footer>
+      <PostFooter prev={prev} next={next} />
     </div>
   </div>
 </SiteLayout>
