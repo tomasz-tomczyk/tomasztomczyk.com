@@ -57,15 +57,19 @@ const tags = await getTags();
             class="absolute z-10 right-[57%] top-[13%] w-[9rem] lg:right-auto lg:left-0 lg:top-[27%] lg:-translate-x-4"
           />
 
-          {/* webp, not the default avif: alpha compresses far better here, and
-              the cut-out is nothing but edges against transparency. */}
+          {/* The LCP element, so the bytes are the whole argument: avif holds
+              this cut-out — skin, fur, alpha edges — at around a quarter less
+              than webp for the same apparent quality. 900w is the top step
+              because the frame is 26rem, which a 2x screen wants at ~832px.
+              q62 is matched against webp's 68 by eye, not by number; the
+              scales are not comparable across the two codecs. */}
           <Image
             src={catPhoto}
             alt="Tomasz holding Harvey, a ginger cat, both looking off to one side"
             widths={[400, 600, 900]}
             sizes="(min-width: 768px) 26rem, 18rem"
-            format="webp"
-            quality={68}
+            format="avif"
+            quality={62}
             loading="eager"
             class="block w-full h-auto"
           />

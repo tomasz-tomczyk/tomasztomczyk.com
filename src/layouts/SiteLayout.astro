@@ -67,12 +67,6 @@ const htmlAttrs: Record<string, string | undefined> = {
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#F6F4EE" />
 
-    {/* Caveat, for the handwritten byline note. Pressmark's BaseLayout loads
-        the two theme faces and preconnects to both font hosts already. */}
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap"
-    />
     <meta property="og:type" content={article ? "article" : "website"} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
