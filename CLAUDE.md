@@ -78,16 +78,27 @@ pnpm pressmark:local    # ../pressmark, edits are live
 pnpm pressmark:npm      # back to the published packages
 ```
 
-**After switching modes, or after any edit under `../pressmark`, clear caches:**
+## Running the site
+
+`pnpm dev` is the only way to start it. Always that — never a bare `astro dev`,
+never a second one on another port.
 
 ```
-rm -rf .astro node_modules/.vite && pnpm dev
+pnpm dev            # http://localhost:4321, also on the LAN
+pnpm dev --fresh    # the same, after throwing the caches away
 ```
 
-Skipping this is the most common way to waste an hour here. The dev server keeps
-serving the previous markdown render and CSS, so a correct change looks like it
-did nothing. Before concluding a change failed, check *what you are looking at*:
-diff the served HTML against a fresh `pnpm build` in `dist/`.
+It holds port 4321, killing whatever already has it, so there is only ever one
+dev server and it is always at the same address. A bare `astro dev` steps to
+4322 instead, which leaves the old one running and invisible.
+
+It also clears `.astro` and `node_modules/.vite` on its own when Pressmark has
+been swapped since the last run. That cache going stale is the most common way
+to waste an hour here: the server keeps serving the previous markdown render and
+CSS, so a correct change looks like it did nothing. If a change still seems to
+have vanished, check *what you are looking at* — diff the served HTML against a
+fresh `pnpm build` in `dist/`. After editing `../pressmark` itself (a swap, so
+nothing to detect), restart with `pnpm dev --fresh`.
 
 `pnpm install` will not repair a `node_modules/@pressmark/*` link you replaced —
 it compares the lockfile against its own state and never inspects `node_modules`,
