@@ -18,37 +18,28 @@ const [lead, ...rest] = posts;
 const recent = rest.slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
 
 const tags = await getTags();
-const firstYear = posts.length
-  ? posts[posts.length - 1].data.date.getFullYear()
-  : new Date().getFullYear();
 ---
 
 <SiteLayout title={SITE.NAME} description={HOME.DESCRIPTION}>
   <div class="px-5 py-10 md:px-12">
     <div class="mx-auto max-w-[64rem]">
-      {/* A masthead rather than an introduction. Who I am is /about's job —
-          repeating the bio here halves the effect of both pages. */}
-      <header class="mb-14 md:mb-20">
-        <div
-          class="flex items-baseline justify-between gap-4 border-b border-raised pb-3 mb-9"
-        >
-          <span class="meta">Notes on software — since {firstYear}</span>
-          <span class="meta">
-            {posts.length} {posts.length === 1 ? "post" : "posts"}
-          </span>
-        </div>
-
-        <h1
-          class="font-display font-light text-4xl md:text-5xl lg:text-6xl leading-[1.02] tracking-[-0.018em] text-ink max-w-[44rem]"
-        >
-          Things I learned the hard way, written down.
+      <section class="mb-14 md:mb-20">
+        <PanelLabel class="mb-7">Hello</PanelLabel>
+        <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em] mb-8">
+          Hi, I'm Tomasz.
         </h1>
-        <p class="dek mt-5 max-w-[38rem]">
-          Elixir, DevOps, incidents, and the practice of leading engineering
-          teams — mostly so I can find it again myself, and partly so someone
-          else skips a step.
-        </p>
-      </header>
+        <div class="prose-pressmark space-y-5">
+          <p>
+            I'm a software engineer who loves leading teams and championing people. Recently I've been at <em>Vetspire</em>,
+            where I transitioned from Head of Engineering to Staff Engineer, working with a team spread across the US and UK.
+          </p>
+          <p>
+            I'm passionate about Elixir, DevOps, and the practice of leading teams well. From building car-sharing platforms
+            at <em>Toyota Connected</em> to customer-centric work at <em>Vetspire</em>, my focus has always been on delivering
+            high-quality solutions and helping my team grow.
+          </p>
+        </div>
+      </section>
 
       {
         lead && (
@@ -127,12 +118,12 @@ const firstYear = posts.length
         </div>
 
         {/* The rail makes the shape of the archive visible — which subjects
-            keep coming back, and how far the thing goes back. */}
+            keep coming back, and how much of each there is. */}
         <aside class="md:col-span-4 space-y-10 md:pt-1">
           {
             tags.length > 0 && (
               <div>
-                <PanelLabel class="mb-3">Subjects</PanelLabel>
+                <PanelLabel class="mb-3">Tags</PanelLabel>
                 <ul class="border-t border-raised">
                   {tags.map((tag) => (
                     <li class="border-b border-raised">
@@ -149,21 +140,6 @@ const firstYear = posts.length
               </div>
             )
           }
-
-          <div>
-            <PanelLabel class="mb-3">Archive</PanelLabel>
-            <p class="text-ink/75 leading-snug">
-              Everything published since {firstYear}, newest first.
-            </p>
-            <p class="meta mt-3">
-              <a
-                href="/posts"
-                class="text-accent hover:underline hover:underline-offset-4"
-              >
-                Browse the archive →
-              </a>
-            </p>
-          </div>
         </aside>
       </section>
     </div>
