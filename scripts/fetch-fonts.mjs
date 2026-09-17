@@ -1,58 +1,94 @@
 /**
- * Re-download the self-hosted copy of Caveat and print its @font-face rules.
+ * Re-download the self-hosted faces and write the @font-face rules for them.
  *
- * Only the subsets listed in `wanted` are kept. The rules it prints must be
- * pasted into src/styles/global.css — the unicode-ranges come from Google and
- * change with the font, and a stale range silently stops matching characters
- * the file still contains.
+ * Every face this site uses is served from /fonts rather than from Google: the
+ * stylesheet link is render-blocking and points at an origin the page
+ * otherwise never touches, which costs a DNS lookup, a TLS handshake and a
+ * round trip before first paint, then the same again on fonts.gstatic.com for
+ * the files themselves.
+ *
+ * Writes src/styles/fonts.css, which global.css imports. Do not edit that file
+ * by hand — the unicode-ranges come from Google and move with the font, and a
+ * stale range silently stops matching characters the file still contains.
+ *
+ *   node scripts/fetch-fonts.mjs
+ *
+ * Only `SUBSETS` are kept. latin-ext is worth its disk because the ranges make
+ * it conditional: a page of plain ASCII never requests it, and a Polish name
+ * in a post title does not fall back to Georgia.
  */
-import { writeFileSync, mkdirSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const OUT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "public", "fonts");
-mkdirSync(OUT, { recursive: true });
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const OUT = resolve(root, "public", "fonts");
+const CSS = resolve(root, "src", "styles", "fonts.css");
 
-// Chrome UA, otherwise Google serves ttf instead of woff2.
+/** Google serves ttf to a UA it does not recognise as woff2-capable. */
 const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36";
 
-const css = await (
-  await fetch(
-    "https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap",
-    { headers: { "User-Agent": UA } },
-  )
-).text();
+const SUBSETS = new Set(["latin", "latin-ext"]);
 
-// Each @font-face block carries its subset name in a preceding comment.
-const blocks = css.split("/*").slice(1);
-const wanted = new Set(["latin", "latin-ext"]);
-const faces = [];
+/**
+ * `slug` names the files; `query` is Google's family syntax.
+ *
+ * Crimson Pro and IBM Plex Mono are Pressmark's two faces and must match what
+ * its type scale is drawn for — the theme names them through --font-display
+ * and --font-body but ships no files. Crimson Pro is variable across 300..700
+ * in both styles, so four files cover every weight the site can ask for.
+ */
+const FAMILIES = [
+  { slug: "crimson-pro", family: "Crimson Pro", query: "Crimson+Pro:ital,wght@0,300..700;1,300..700" },
+  { slug: "ibm-plex-mono", family: "IBM Plex Mono", query: "IBM+Plex+Mono:wght@400;500" },
+  { slug: "caveat", family: "Caveat", query: "Caveat:wght@500" },
+];
 
-for (const block of blocks) {
-  const subset = block.slice(0, block.indexOf("*/")).trim();
-  if (!wanted.has(subset)) continue;
-  const url = block.match(/url\((https:[^)]+\.woff2)\)/)?.[1];
-  const range = block.match(/unicode-range:\s*([^;]+);/)?.[1]?.trim();
-  if (!url) continue;
+const get = (url) => fetch(url, { headers: { "User-Agent": UA } });
 
-  const buf = Buffer.from(
-    await (await fetch(url, { headers: { "User-Agent": UA } })).arrayBuffer(),
-  );
-  const file = `caveat-500-${subset}.woff2`;
-  writeFileSync(`${OUT}/${file}`, buf);
-  faces.push({ subset, file, range, bytes: buf.length });
-  console.log(`${file.padEnd(28)} ${(buf.length / 1024).toFixed(1)}KB`);
+mkdirSync(OUT, { recursive: true });
+const rules = [];
+
+for (const { slug, family, query } of FAMILIES) {
+  const css = await (
+    await get(`https://fonts.googleapis.com/css2?family=${query}&display=swap`)
+  ).text();
+
+  // Google emits one `/* subset */` comment before each @font-face block.
+  for (const block of css.split("/*").slice(1)) {
+    const subset = block.slice(0, block.indexOf("*/")).trim();
+    if (!SUBSETS.has(subset)) continue;
+
+    const url = block.match(/url\((https:[^)]+\.woff2)\)/)?.[1];
+    const range = block.match(/unicode-range:\s*([^;]+);/)?.[1]?.trim();
+    const style = /font-style:\s*italic/.test(block) ? "italic" : "normal";
+    // A variable face states a range ("300 700"); a static one a single value.
+    const weight = block.match(/font-weight:\s*([^;]+);/)?.[1]?.trim() ?? "400";
+    if (!url) continue;
+
+    const name = `${slug}-${weight.replace(/\s+/g, "-")}${style === "italic" ? "-italic" : ""}-${subset}.woff2`;
+    const buf = Buffer.from(await (await get(url)).arrayBuffer());
+    writeFileSync(resolve(OUT, name), buf);
+    console.log(`${name.padEnd(42)} ${(buf.length / 1024).toFixed(1)}KB`);
+
+    rules.push(
+      `@font-face {\n` +
+        `  font-family: "${family}";\n` +
+        `  font-style: ${style};\n` +
+        `  font-weight: ${weight};\n` +
+        `  font-display: swap;\n` +
+        `  src: url("/fonts/${name}") format("woff2");\n` +
+        `  unicode-range: ${range};\n` +
+        `}`,
+    );
+  }
 }
 
-console.log("\n--- css ---");
-for (const f of faces) {
-  console.log(`@font-face {
-  font-family: "Caveat";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/${f.file}") format("woff2");
-  unicode-range: ${f.range};
-}`);
-}
+writeFileSync(
+  CSS,
+  `/* Generated by scripts/fetch-fonts.mjs. Do not edit — rerun the script. */\n\n` +
+    rules.join("\n\n") +
+    "\n",
+);
+console.log(`\n${rules.length} faces → ${CSS.replace(root + "/", "")}`);

@@ -80,17 +80,25 @@ pnpm pressmark:npm      # back to the published packages
 
 ## Running the site
 
-`pnpm dev` is the only way to start it. Always that — never a bare `astro dev`,
-never a second one on another port.
+`pnpm dev` and `pnpm preview` are the only ways to start it. Always those —
+never a bare `astro dev`, never a second one on another port.
 
 ```
 pnpm dev            # http://localhost:4321, also on the LAN
 pnpm dev --fresh    # the same, after throwing the caches away
+pnpm preview        # http://localhost:4322, serving dist/
 ```
 
-It holds port 4321, killing whatever already has it, so there is only ever one
-dev server and it is always at the same address. A bare `astro dev` steps to
-4322 instead, which leaves the old one running and invisible.
+Each owns its port and takes it back before starting: it stops Astro's
+background daemon, then kills whatever still holds the port. So there is only
+ever one of each, always at the same address, and the two coexist.
+
+Astro on its own does neither. Its server is a daemon behind a lock file, and
+when the port is taken it steps to the next one and carries on — leaving the
+old server running and invisible at a URL nobody asked for. Stacking those is
+how this repo once accumulated 37 of them. Worse, a daemon stranded on the
+wrong port still holds the lock, so the next start reports "already running"
+and hands you that one, silently ignoring `--port`.
 
 It also clears `.astro` and `node_modules/.vite` on its own when Pressmark has
 been swapped since the last run. That cache going stale is the most common way

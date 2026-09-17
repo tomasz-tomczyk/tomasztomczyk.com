@@ -46,7 +46,17 @@ const htmlAttrs: Record<string, string | undefined> = {
 };
 ---
 
-<BaseLayout title={fullTitle} description={description} htmlAttrs={htmlAttrs}>
+{/* `fonts={false}`: every face is self-hosted, declared in src/styles/fonts.css.
+    `favicon={false}`: the real icon set is in the head slot below. Both stop
+    BaseLayout emitting its own, which would otherwise compete rather than be
+    replaced. */}
+<BaseLayout
+  title={fullTitle}
+  description={description}
+  htmlAttrs={htmlAttrs}
+  favicon={false}
+  fonts={false}
+>
   <Fragment slot="head">
     <link rel="canonical" href={canonicalURL} />
 

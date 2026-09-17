@@ -21,11 +21,11 @@ importers:
         specifier: ^3.7.4
         version: 3.7.4
       '@pressmark/astro':
-        specifier: ^0.9.0
-        version: 0.9.0(@pressmark/theme@0.9.0(tailwindcss@4.3.3))(astro@7.3.2(@astrojs/markdown-remark@7.3.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@24.13.5)(jiti@2.7.0)(yaml@2.9.1))(shiki@4.4.3)
+        specifier: ^0.9.1
+        version: 0.9.1(@pressmark/theme@0.9.1(tailwindcss@4.3.3))(astro@7.3.2(@astrojs/markdown-remark@7.3.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@24.13.5)(jiti@2.7.0)(yaml@2.9.1))(shiki@4.4.3)
       '@pressmark/theme':
-        specifier: ^0.9.0
-        version: 0.9.0(tailwindcss@4.3.3)
+        specifier: ^0.9.1
+        version: 0.9.1(tailwindcss@4.3.3)
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.3.0(@types/node@24.13.5)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
@@ -739,15 +739,15 @@ packages:
   '@oxc-project/types@0.150.0':
     resolution: {integrity: sha512-rDS5/31E9HfPl/CIzGrn0DOlvBbXFseQ5URJ9sYMfstbKLD/c6Gm9vmRzRGDdAXyOIL4zmO37lc9RIwYqVruZw==}
 
-  '@pressmark/astro@0.9.0':
-    resolution: {integrity: sha512-1L1HO/2KoalZlEsS1GljAkE6gZ7cv/QhJ3s+wHJ9eK/y8EKtFri0Pd6KSRnuySvg8TK7Oq0PozAtR+VlhKTQlg==}
+  '@pressmark/astro@0.9.1':
+    resolution: {integrity: sha512-1RCMG0XUWoOoP4vJVqRsZBFtQQDh3M/AdQMzXv6wKjGAcm/oBoDNvGYr+pS7/gw+/4nPGUhccoLRgdB6RRQIKQ==}
     peerDependencies:
       '@pressmark/theme': ^0.9.0
       astro: ^5.0.0 || ^6.0.0 || ^7.0.0
       shiki: ^1.0.0 || ^3.0.0 || ^4.0.0
 
-  '@pressmark/theme@0.9.0':
-    resolution: {integrity: sha512-/BQt/glfO0Qvu/aLyK650/wjp4nzfbXinup3Zht6cwVQw+YPm1Qod9l88SspR87kmrgeGLwZlW62VRcSYHqxTQ==}
+  '@pressmark/theme@0.9.1':
+    resolution: {integrity: sha512-4wPrTcT2tOLiXEAgDkL+OpHCujIRNfkZJrMOH7bXO2IcxBmf/GNyOmc9AQN/0yf67UjUOztPCOEIzwl2CUvjHA==}
     peerDependencies:
       tailwindcss: ^4.0.0
 
@@ -3829,14 +3829,14 @@ snapshots:
 
   '@oxc-project/types@0.150.0': {}
 
-  '@pressmark/astro@0.9.0(@pressmark/theme@0.9.0(tailwindcss@4.3.3))(astro@7.3.2(@astrojs/markdown-remark@7.3.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@24.13.5)(jiti@2.7.0)(yaml@2.9.1))(shiki@4.4.3)':
+  '@pressmark/astro@0.9.1(@pressmark/theme@0.9.1(tailwindcss@4.3.3))(astro@7.3.2(@astrojs/markdown-remark@7.3.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@24.13.5)(jiti@2.7.0)(yaml@2.9.1))(shiki@4.4.3)':
     dependencies:
-      '@pressmark/theme': 0.9.0(tailwindcss@4.3.3)
+      '@pressmark/theme': 0.9.1(tailwindcss@4.3.3)
       astro: 7.3.2(@astrojs/markdown-remark@7.3.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@24.13.5)(jiti@2.7.0)(yaml@2.9.1)
       shiki: 4.4.3
       unist-util-visit: 5.1.0
 
-  '@pressmark/theme@0.9.0(tailwindcss@4.3.3)':
+  '@pressmark/theme@0.9.1(tailwindcss@4.3.3)':
     dependencies:
       tailwindcss: 4.3.3
 
