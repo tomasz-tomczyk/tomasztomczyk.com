@@ -118,10 +118,11 @@ const hasToc = headings.some((h) => h.depth === 2);
       /* Absolute, so the column reserves no width and the article stays
          centred. top-20 clears the 56px Topbar once the nav sticks.
 
-         Width is capped by `wide-media`, whose figures break out to 54rem:
-         the gutter is (vw - 864)/2, less the 24px right margin. 240px clears
-         it at 1440 and 288px at 1536 — hence two steps rather than one. */
-      <div class="absolute inset-y-0 right-6 w-60 min-[1536px]:w-72 hidden min-[1440px]:block">
+         Width and breakpoint are both set by `wide-media`, whose figures
+         break out to 64rem: the gutter is (vw - 1024)/2, and the column has
+         to fit in it less the 24px right margin and a hair of clearance.
+         240px clears that at 1600 and 288px at 1728 — hence two steps. */
+      <div class="absolute inset-y-0 right-6 w-60 min-[1728px]:w-72 hidden min-[1600px]:block">
         <nav
           class="sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto bg-surface/90 backdrop-blur-sm py-2 opacity-60 transition-opacity duration-300 hover:opacity-100 focus-within:opacity-100 motion-reduce:transition-none"
           aria-label="On this page"
