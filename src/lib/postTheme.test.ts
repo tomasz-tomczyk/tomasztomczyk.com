@@ -45,7 +45,7 @@ function throws(fn: () => unknown, mustMention: string[], what: string): void {
     const message = error instanceof Error ? error.message : String(error);
     for (const fragment of mustMention) {
       if (!message.includes(fragment)) {
-        throw new Error(`${what}: error missing "${fragment}" — got: ${message}`);
+        throw new Error(`${what}: error missing "${fragment}" — got: ${message}`, { cause: error });
       }
     }
     return;
