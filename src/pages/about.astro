@@ -74,15 +74,12 @@ const colophon = COLOPHON.map((entry) => ({
             direction="left"
             class="hidden md:block w-[11rem] -ml-5 mb-8"
           />
-          <PanelLabel class="mb-4">{ABOUT.TITLE}</PanelLabel>
           <h1
             class="font-display font-light text-4xl md:text-5xl lg:text-6xl leading-[1.02] tracking-[-0.018em] text-ink"
           >
             Hi, I'm Tomasz.
           </h1>
-          <p
-            class="mt-4 font-display italic text-xl md:text-2xl leading-snug text-muted max-w-[34rem]"
-          >
+          <p class="dek-voice mt-4 max-w-[34rem]">
             A software engineer who likes leading teams, shipping things that
             hold up, and writing down what I learned on the way.
           </p>
@@ -133,7 +130,6 @@ const colophon = COLOPHON.map((entry) => ({
                 </div>
               ))}
             </dl>
-            <p class="mt-3 meta">True as of {CURRENTLY.UPDATED}.</p>
           </div>
 
           <div>
@@ -149,15 +145,17 @@ const colophon = COLOPHON.map((entry) => ({
                       {link.label}
                     </span>
                   </span>
-                  <a
-                    href={link.href}
-                    class="meta truncate min-w-0 text-ink/80 underline decoration-ink/25 decoration-1 underline-offset-[0.25em] hover:text-accent hover:decoration-accent transition-colors"
-                    {...(link.external
-                      ? { target: "_blank", rel: "noopener noreferrer" }
-                      : {})}
-                  >
-                    {link.value}
-                  </a>
+                  <span class="meta truncate min-w-0">
+                    <a
+                      href={link.href}
+                      class="link"
+                      {...(link.external
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                    >
+                      {link.value}
+                    </a>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -178,7 +176,7 @@ const colophon = COLOPHON.map((entry) => ({
       >
         <h2>Looking for my CV?</h2>
         <p class="cv-link">
-          <a href="/cv">Read the CV &rarr;</a>
+          <a href="/cv" class="link">Read the CV &rarr;</a>
         </p>
       </IllustratedPanel>
 
@@ -215,11 +213,5 @@ const colophon = COLOPHON.map((entry) => ({
   .cv-link a {
     font-family: var(--font-display);
     font-size: 1.25rem;
-    color: var(--color-accent);
-    text-decoration: none;
-  }
-  .cv-link a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
   }
 </style>

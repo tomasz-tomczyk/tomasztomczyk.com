@@ -30,8 +30,8 @@ const years = Object.keys(byYear).sort((a, b) => parseInt(b) - parseInt(a));
       {/* Tags are linked from here rather than the nav, which stays at three
           items. */}
       <p class="meta mt-5">
-        <a href="/tags" class="text-accent hover:underline hover:underline-offset-4">
-          Browse by tag →
+        <a href="/tags" class="link">
+          Browse by tag <span class="arrow">→</span>
         </a>
       </p>
     </header>
@@ -49,7 +49,7 @@ const years = Object.keys(byYear).sort((a, b) => parseInt(b) - parseInt(a));
             {byYear[year].map((post) => (
               <PostListItem
                 post={post}
-                timeWidth="w-16"
+                timeWidth="w-20"
                 descriptionLines={2}
                 dateFormat={{ month: "short", day: "numeric" }}
               />

@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { formatDate } from "@lib/utils";
+import Icon from "@components/Icon.astro";
 
 type Props = {
   post: CollectionEntry<"posts">;
@@ -22,11 +23,12 @@ const clampClass = descriptionLines === 1 ? "line-clamp-1" : "line-clamp-2";
     href={`/posts/${post.id}`}
     class="group flex items-baseline gap-6 py-4 -mx-3 px-3 hover:bg-raised/40 transition-colors"
   >
-    <time class:list={["meta shrink-0", timeWidth]}>
+    <time class:list={["meta shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap", timeWidth]}>
+      <Icon name="calendar" size={13} class="opacity-70" />
       {formatDate(post.data.date, dateFormat)}
     </time>
     <div class="flex-1 min-w-0">
-      <div class="font-display text-xl text-ink group-hover:text-accent leading-snug">
+      <div class="font-display font-semibold text-xl text-ink group-hover:text-accent leading-snug">
         {post.data.title}
       </div>
       {post.data.description && (
@@ -35,6 +37,6 @@ const clampClass = descriptionLines === 1 ? "line-clamp-1" : "line-clamp-2";
         </div>
       )}
     </div>
-    <span class="shrink-0 text-accent text-sm opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+    <span class="shrink-0 text-accent text-sm opacity-0 group-hover:opacity-100 transition-opacity"><span class="arrow">→</span></span>
   </a>
 </li>

@@ -79,3 +79,10 @@
 .byline-facts .byline-sep {
   color: color-mix(in srgb, var(--color-ink) 42%, var(--color-surface));
 }
+
+/* ArchiveNote's body is authored markup, so its links cannot carry a class.
+   Styled here rather than in the component because `@apply` needs the file
+   that imports Tailwind. */
+.archive-copy a {
+  @apply link;
+}

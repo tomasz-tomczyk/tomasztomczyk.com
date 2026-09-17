@@ -1,4 +1,5 @@
 ---
+import Icon from "@components/Icon.astro";
 import IconLabel from "@components/IconLabel.astro";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
@@ -27,7 +28,6 @@ const tags = await getTags();
     <div class="mx-auto max-w-measure-wide">
       <section class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 md:items-center mb-14 md:mb-20">
         <div class="md:col-span-7">
-          <PanelLabel class="mb-7">Hello</PanelLabel>
           <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em] mb-8">
             Hi, I'm Tomasz.
           </h1>
@@ -79,7 +79,7 @@ const tags = await getTags();
 
       {
         lead && (
-          <section class="mb-14 md:mb-20 border-y border-raised py-8 md:py-10">
+          <section class="mb-14 md:mb-20 border-t border-raised pt-8 md:pt-10">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10">
               {/* No artwork column at all when the post has no cover — most
                   don't, and an empty frame is worse than none. */}
@@ -104,11 +104,16 @@ const tags = await getTags();
                   !lead.data.cover && "md:col-span-9",
                 ]}
               >
-                <PanelLabel class="mb-4">Latest</PanelLabel>
-                <p class="meta mb-3">
-                  {formatDate(lead.data.date)}
-                  <span class="mx-2 opacity-50">·</span>
-                  {readingTime(lead.body ?? "")}
+                <p class="meta mb-3 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                  <span class="inline-flex items-center gap-2 whitespace-nowrap">
+                    <Icon name="calendar" size={13} class="opacity-70" />
+                    {formatDate(lead.data.date)}
+                  </span>
+                  <span aria-hidden="true" class="opacity-50">·</span>
+                  <span class="inline-flex items-center gap-2 whitespace-nowrap">
+                    <Icon name="clock" size={13} class="opacity-70" />
+                    {readingTime(lead.body ?? "")}
+                  </span>
                 </p>
                 <h2
                   class="font-display font-light text-3xl md:text-4xl lg:text-5xl leading-[1.06] tracking-[-0.014em] max-w-[40rem]"
@@ -125,7 +130,7 @@ const tags = await getTags();
                 </p>
                 <p class="mt-5">
                   <a href={`/posts/${lead.id}`} class="btn-link">
-                    Continue reading →
+                    Continue reading <span class="arrow">→</span>
                   </a>
                 </p>
               </div>
@@ -138,14 +143,14 @@ const tags = await getTags();
         <div class="md:col-span-8">
           <div class="flex items-baseline justify-between mb-5">
             <PanelLabel>More notes</PanelLabel>
-            <a href="/posts" class="btn-link">See all →</a>
+            <a href="/posts" class="btn-link">See all <span class="arrow">→</span></a>
           </div>
           <ul class="border-t border-raised">
             {
               recent.map((post) => (
                 <PostListItem
                   post={post}
-                  timeWidth="w-24"
+                  timeWidth="w-32"
                   descriptionLines={1}
                 />
               ))
