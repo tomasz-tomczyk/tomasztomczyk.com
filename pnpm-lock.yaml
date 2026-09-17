@@ -18,11 +18,11 @@ importers:
         specifier: ^3.7.2
         version: 3.7.2
       '@pressmark/astro':
-        specifier: ^0.6.0
-        version: 0.6.0(@pressmark/theme@0.6.0(tailwindcss@4.3.0))(astro@6.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(shiki@4.0.2)
+        specifier: ^0.8.0
+        version: 0.8.0(@pressmark/theme@0.8.0(tailwindcss@4.3.0))(astro@6.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(shiki@4.0.2)
       '@pressmark/theme':
-        specifier: ^0.6.0
-        version: 0.6.0(tailwindcss@4.3.0)
+        specifier: ^0.8.0
+        version: 0.8.0(tailwindcss@4.3.0)
       '@tailwindcss/vite':
         specifier: ^4.3.0
         version: 4.3.0(vite@7.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.0))
@@ -587,15 +587,15 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@pressmark/astro@0.6.0':
-    resolution: {integrity: sha512-1Y2uEuhGfgBcEyfGD4WbwS9TYe/Wp/Zyu6udk54zADtYm0dxAXFJ4ykugvJONhnx+qkAWEWAG82hMffRnb5OQQ==}
+  '@pressmark/astro@0.8.0':
+    resolution: {integrity: sha512-oYQTSGgUATVzL/AAm4DySEqmUiUR2geqNxRiLiOBn1UKvIicfpcb2SPGAe5X9ELUPJN4v2Uhevu1jVVXBMm4sw==}
     peerDependencies:
-      '@pressmark/theme': ^0.6.0
+      '@pressmark/theme': ^0.8.0
       astro: ^5.0.0 || ^6.0.0
       shiki: ^1.0.0 || ^3.0.0 || ^4.0.0
 
-  '@pressmark/theme@0.6.0':
-    resolution: {integrity: sha512-RhnAclP4H8u7+Gf33Hgf4qD0z2OPYzLxfyj6jJ46tddyxvUpGfp+Q020U2LJ1W6duML0DxiAHIZxHkHfRWvNAA==}
+  '@pressmark/theme@0.8.0':
+    resolution: {integrity: sha512-dzyrgeX7D/J5FfOlwhFV4U4GsEfzm4RpCoVf7H55giFwz2eCV6p+AXrRUqFt+Hut8OCakgGz5HzNmeUghvjjqw==}
     peerDependencies:
       tailwindcss: ^4.0.0
 
@@ -3547,14 +3547,14 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@pressmark/astro@0.6.0(@pressmark/theme@0.6.0(tailwindcss@4.3.0))(astro@6.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(shiki@4.0.2)':
+  '@pressmark/astro@0.8.0(@pressmark/theme@0.8.0(tailwindcss@4.3.0))(astro@6.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(shiki@4.0.2)':
     dependencies:
-      '@pressmark/theme': 0.6.0(tailwindcss@4.3.0)
+      '@pressmark/theme': 0.8.0(tailwindcss@4.3.0)
       astro: 6.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0)
       shiki: 4.0.2
       unist-util-visit: 5.1.0
 
-  '@pressmark/theme@0.6.0(tailwindcss@4.3.0)':
+  '@pressmark/theme@0.8.0(tailwindcss@4.3.0)':
     dependencies:
       tailwindcss: 4.3.0
 
