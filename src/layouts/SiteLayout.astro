@@ -49,6 +49,24 @@ const htmlAttrs: Record<string, string | undefined> = {
 <BaseLayout title={fullTitle} description={description} htmlAttrs={htmlAttrs}>
   <Fragment slot="head">
     <link rel="canonical" href={canonicalURL} />
+
+    {/* The TT monogram. These must stay in this slot rather than move into
+        Pressmark: BaseLayout hardcodes its own placeholder <link rel="icon">
+        and takes no prop to replace it, so all a consumer can do is declare a
+        better-specified icon afterwards and let the browser prefer it. Hence
+        the explicit `type` and `sizes` on every entry — an icon link with no
+        metadata is exactly what the placeholder is, and the tie is what we are
+        trying to win. */}
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    {/* iOS ignores `sizes` here and rescales whatever it finds; one 180px
+        opaque image is the whole contract. Transparency would come out black
+        on the home screen, so the file is flattened onto the page cream. */}
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#F6F4EE" />
+
     {/* Caveat, for the handwritten byline note. Pressmark's BaseLayout loads
         the two theme faces and preconnects to both font hosts already. */}
     <link
