@@ -145,11 +145,17 @@ const hasToc = headings.some((h) => h.depth === 2);
           Back on the 46rem measure, so it aligns with the article rather than
           straddling it — which also widens the left margin enough for the note
           to return at xl instead of waiting for the ToC breakpoint. */}
-      <div class:list={["byline-row relative mx-auto max-w-[46rem] pb-9",
-        /* 36px binds the byline up to the title block — but with a cover
-           the title lives inside the hero, so there is no title block to
-           bind to and 36px just crowds a full-bleed photo. */
-        post.data.cover ? "mt-16" : "mt-9"]}>
+      {/* Even air on both sides. The asymmetry this replaces (36 above, 76
+          below) was meant to bind the byline up to the title and detach it
+          from the article, but at this block's height it read as lopsided
+          rather than deliberate. 16px here plus the article wrapper's own
+          40px gives 56 below, matching the 56 above.
+
+          Cover posts keep a little more overhead: the title sits inside the
+          hero there, so the byline is answering to a full-bleed photo rather
+          than to a title block. */}
+      <div class:list={["byline-row relative mx-auto max-w-[46rem] pb-4",
+        post.data.cover ? "mt-16" : "mt-14"]}>
         {AUTHOR.NOTE && (
           <AuthorAnnotation text={AUTHOR.NOTE} class="hidden xl:block absolute right-full -top-2 mr-1 w-[11rem]" />
         )}
