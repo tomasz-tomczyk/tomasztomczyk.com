@@ -4,16 +4,12 @@ import IconLabel from "@components/IconLabel.astro";
 import { type CollectionEntry, getCollection, render } from "astro:content";
 import { getImage } from "astro:assets";
 import SiteLayout from "@layouts/SiteLayout.astro";
-import {
-  Prose,
-  TableOfContents,
-  Hero,
-  AuthorCard,
-} from "@pressmark/astro";
+import { Prose, TableOfContents, Hero, AuthorCard } from "@pressmark/astro";
 import AuthorAnnotation from "@components/AuthorAnnotation.astro";
 import PostFooter from "@components/PostFooter.astro";
 import Comments from "@components/Comments.astro";
 import ArchiveNote from "@components/ArchiveNote.astro";
+
 import { formatDate, readingTime, tagSlug } from "@lib/utils";
 import { AUTHOR } from "@consts";
 
@@ -61,7 +57,6 @@ const coverURL = coverImage
 
 // No ToC for a post with no sections to jump to.
 const hasToc = headings.some((h) => h.depth === 2);
-
 ---
 
 <SiteLayout
@@ -72,84 +67,101 @@ const hasToc = headings.some((h) => h.depth === 2);
   theme={post.data.theme}
   themeSource={`src/content/posts/${post.id}`}
 >
-  {post.data.cover ? (
-    <Hero
-      src={post.data.cover}
-      alt={post.data.coverAlt ?? ""}
-      variant="banner"
-      scrimStyle="gradient"
-      position={post.data.coverPosition ?? "center"}
-      minHeight="24rem"
-    >
-      <div class="px-5 pt-10 pb-12 md:px-12">
+  {
+    post.data.cover ? (
+      <Hero
+        src={post.data.cover}
+        alt={post.data.coverAlt ?? ""}
+        variant="banner"
+        scrimStyle="gradient"
+        position={post.data.coverPosition ?? "center"}
+        minHeight="24rem"
+      >
+        <div class="px-5 pt-10 pb-12 md:px-12">
+          <div class="mx-auto max-w-measure">
+            <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em]">
+              {post.data.title}
+            </h1>
+
+            {post.data.description && (
+              <p class="dek mt-6 max-w-[36rem]">{post.data.description}</p>
+            )}
+          </div>
+        </div>
+      </Hero>
+    ) : (
+      <header class="px-5 pt-10 md:px-12">
         <div class="mx-auto max-w-measure">
           <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em]">
             {post.data.title}
           </h1>
 
           {post.data.description && (
-            <p class="dek mt-6 max-w-[36rem]">
-              {post.data.description}
-            </p>
+            <p class="dek mt-6 max-w-[36rem]">{post.data.description}</p>
           )}
         </div>
-      </div>
-    </Hero>
-  ) : (
-    <header class="px-5 pt-10 md:px-12">
-      <div class="mx-auto max-w-measure">
-        <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em]">
-          {post.data.title}
-        </h1>
+      </header>
+    )
+  }
 
-        {post.data.description && (
-          <p class="dek mt-6 max-w-[36rem]">
-            {post.data.description}
-          </p>
-        )}
-      </div>
-    </header>
-  )}
-
-  {/* Positioned, so the ToC column can span exactly from the end of the hero
-      to the foot of the article. */}
+  {
+    /* Positioned, so the ToC column can span exactly from the end of the hero
+      to the foot of the article. */
+  }
   <div class="relative">
-    {hasToc && (
-      /* Absolute, so the column reserves no width and the article stays
+    {
+      hasToc && (
+        /* Absolute, so the column reserves no width and the article stays
          centred. top-20 clears the 56px Topbar once the nav sticks.
 
          Width and breakpoint are both set by `wide-media`, whose figures
          break out to 64rem: the gutter is (vw - 1024)/2, and the column has
          to fit in it less the 24px right margin and a hair of clearance.
          240px clears that at 1600 and 288px at 1728 — hence two steps. */
-      <div class="absolute inset-y-0 right-6 w-60 min-[1728px]:w-72 hidden min-[1600px]:block">
-        <nav
-          class="sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto bg-surface/90 backdrop-blur-sm py-2 opacity-60 transition-opacity duration-300 hover:opacity-100 focus-within:opacity-100 motion-reduce:transition-none"
-          aria-label="On this page"
-        >
-          <TableOfContents headings={headings} />
-        </nav>
-      </div>
-    )}
+        <div class="absolute inset-y-0 right-6 w-60 min-[1728px]:w-72 hidden min-[1600px]:block">
+          <nav
+            class="sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto bg-surface/90 backdrop-blur-sm py-2 opacity-60 transition-opacity duration-300 hover:opacity-100 focus-within:opacity-100 motion-reduce:transition-none"
+            aria-label="On this page"
+          >
+            <TableOfContents headings={headings} />
+          </nav>
+        </div>
+      )
+    }
 
-    {/* Byline. The only place the date and read time appear above the
+    {
+      /* Byline. The only place the date and read time appear above the
         article. No rules: what separates it is register and space — nothing
-        here sits at body size or body leading. */}
+        here sits at body size or body leading. */
+    }
     <div class="px-5 md:px-12">
-      {/* Even air on both sides: pb-4 here plus the article wrapper's own 40px
+      {
+        /* Even air on both sides: pb-4 here plus the article wrapper's own 40px
           gives 56 below, matching the 56 above. Cover posts take a little more
           overhead, since the byline answers to a full-bleed photo rather than
-          to a title block. */}
-      <div class:list={["byline-row relative mx-auto max-w-measure pb-4",
-        post.data.cover ? "mt-16" : "mt-14"]}>
-        {AUTHOR.NOTE && (
-          <AuthorAnnotation text={AUTHOR.NOTE} class="hidden xl:block absolute right-full -top-2 mr-1 w-[11rem]" />
-        )}
+          to a title block. */
+      }
+      <div
+        class:list={[
+          "byline-row relative mx-auto max-w-measure pb-4",
+          post.data.cover ? "mt-16" : "mt-14",
+        ]}
+      >
+        {
+          AUTHOR.NOTE && (
+            <AuthorAnnotation
+              text={AUTHOR.NOTE}
+              class="hidden xl:block absolute right-full -top-2 mr-1 w-[11rem]"
+            />
+          )
+        }
 
-        {/* `href` rather than an anchor wrapped around the component: only the
+        {
+          /* `href` rather than an anchor wrapped around the component: only the
             name is a real link and it stretches over the card, so a screen
             reader announces "Tomasz Tomczyk" instead of the whole bio, and
-            `links` could be added back without nesting anchors. */}
+            `links` could be added back without nesting anchors. */
+        }
         <AuthorCard
           name={AUTHOR.NAME}
           avatar={AUTHOR.AVATAR}
@@ -159,10 +171,14 @@ const hasToc = headings.some((h) => h.depth === 2);
           avatarSize="lg"
         />
 
-        {/* Indented past the avatar so it hangs under the name rather than
+        {
+          /* Indented past the avatar so it hangs under the name rather than
             under the photo. Kept outside the AuthorCard — the tag links
-            cannot nest inside its anchor. */}
-        <ul class="byline-facts panel-label mt-3.5 sm:ml-[6.5rem] flex flex-wrap items-center gap-x-2.5 gap-y-2 list-none">
+            cannot nest inside its anchor. */
+        }
+        <ul
+          class="byline-facts panel-label mt-3.5 sm:ml-[6.5rem] flex flex-wrap items-center gap-x-2.5 gap-y-2 list-none"
+        >
           <li class="flex items-center gap-2">
             <Icon name="calendar" size={14} class="opacity-70" />
             {dateLabel}
@@ -175,28 +191,40 @@ const hasToc = headings.some((h) => h.depth === 2);
             {minutes}
           </li>
 
-          {post.data.tags?.map((tag) => (
-            <>
-              <li aria-hidden="true" class="byline-sep">&middot;</li>
-              <li>
-                <a
-                  href={`/tags/${tagSlug(tag)}`}
-                  class="no-underline hover:text-accent transition-colors"
-                ><IconLabel label={tag} /></a>
-              </li>
-            </>
-          ))}
+          {
+            post.data.tags?.map((tag) => (
+              <>
+                <li aria-hidden="true" class="byline-sep">
+                  &middot;
+                </li>
+                <li>
+                  <a
+                    href={`/tags/${tagSlug(tag)}`}
+                    class="no-underline hover:text-accent transition-colors"
+                  >
+                    <IconLabel label={tag} />
+                  </a>
+                </li>
+              </>
+            ))
+          }
         </ul>
       </div>
     </div>
 
-    {/* No bottom padding: the site footer's own top margin is the only air
-        between the foot of a post and the cat. */}
+    {
+      /* No bottom padding: the site footer's own top margin is the only air
+        between the foot of a post and the cat. */
+    }
     <div class="px-5 pt-10 md:px-12">
-      {/* MDX posts can use <ArchiveNote> with no import of their own. The
-          dropcap targets the first <p>, so a note above it takes nothing. */}
+      {
+        /* MDX has no imports of its own, so every component a post may use has
+          to be passed here by name — an unlisted one fails the build with
+          "Expected component X to be defined". The dropcap targets the first
+          <p>, so a note above it takes nothing. */
+      }
       <Prose dropcap class="wide-media">
-        <Content components={{ ArchiveNote }} />
+        <Content components={{ ArchiveNote, IconLabel }} />
       </Prose>
 
       <Comments discussion={post.data.discussion} />

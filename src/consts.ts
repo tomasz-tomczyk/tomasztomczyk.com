@@ -8,8 +8,10 @@ export const SITE: Site = {
   NUM_PROJECTS_ON_HOMEPAGE: 0,
 };
 
+import { REPO_URL } from "@lib/comments";
+
 /** Where the source lives, and where post comments are discussed. */
-export { REPO_URL as REPO } from "@lib/comments";
+export { REPO_URL as REPO };
 
 export const HOME: Metadata = {
   TITLE: "Home",
@@ -25,13 +27,13 @@ export const POSTS: Metadata = {
 export const ABOUT: Metadata = {
   TITLE: "About",
   DESCRIPTION:
-    "Software engineer working on Elixir, DevOps, and engineering leadership. Where I've worked, and how to reach me.",
+    "Staff engineer working on Elixir, DevOps, and engineering leadership. Where I've worked, and how to reach me.",
 };
 
 /** Rendered by AuthorCard on every post. Written once, shown everywhere. */
 export const AUTHOR: Author = {
   NAME: "Tomasz Tomczyk",
-  BIO: "Software engineer. I write about Elixir, DevOps, and the practice of leading teams well.",
+  BIO: "Staff engineer. I write about Elixir, DevOps, and the practice of leading teams well.",
   AVATAR: "/tomasz.jpg",
   NOTE: "Written by a human",
 };
@@ -70,18 +72,65 @@ export const CURRENTLY = {
   UPDATED: "September 2026",
   ITEMS: [
     { LABEL: "Work", VALUE: "Staff Engineer at Vetspire — Elixir, Phoenix, GraphQL" },
-    { LABEL: "Making", VALUE: "Pressmark, the Astro theme this site runs on" },
-    { LABEL: "Writing", VALUE: "Notes on Elixir, DevOps, and running engineering teams" },
-    { LABEL: "Place", VALUE: "South London" },
+    { LABEL: "Location", VALUE: "South London" },
   ],
 } as const;
 
-/** How the site is put together. Rendered in the /about colophon. */
+/** Side projects, listed on /about. An internal HREF is left un-targeted. */
+export const PROJECTS = [
+  {
+    NAME: "Crit",
+    HREF: "https://crit.md",
+    NOTE: "A local-first review tool for reviewing and iterating on coding-agent output.",
+  },
+  {
+    NAME: "Pressmark",
+    HREF: "https://github.com/tomasz-tomczyk/pressmark",
+    NOTE: "The Astro theme this site runs on, published as a pair of npm packages.",
+  },
+  {
+    NAME: "This site",
+    HREF: REPO_URL,
+    NOTE: "Notes on Elixir, DevOps, and running engineering teams. The source is on GitHub.",
+  },
+] as const;
+
+/**
+ * How the site is put together. Rendered in the /about colophon, whose
+ * DetailList passes VALUE through `set:html` — inline links are allowed here
+ * and nowhere near user input.
+ *
+ * Typography must name the faces actually loaded: Crimson Pro and IBM Plex
+ * Mono come from Pressmark's BaseLayout, Caveat from SiteLayout.
+ */
 export const COLOPHON = [
-  { LABEL: "Typography", VALUE: "Crimson Pro · DM Mono · Caveat" },
-  { LABEL: "Built with", VALUE: "Astro · Tailwind v4 · Pressmark" },
-  { LABEL: "Written in", VALUE: "Markdown, by hand, usually late" },
-  { LABEL: "Analytics", VALUE: "Umami — no cookies, nothing personal" },
+  {
+    LABEL: "Framework",
+    VALUE:
+      "<a class=\"link\" href=\"https://astro.build\" target=\"_blank\" rel=\"noopener noreferrer\">Astro</a>",
+  },
+  {
+    LABEL: "Styling",
+    VALUE:
+      "<a class=\"link\" href=\"https://tailwindcss.com\" target=\"_blank\" rel=\"noopener noreferrer\">Tailwind</a>",
+  },
+  {
+    LABEL: "Theme",
+    VALUE:
+      "<a class=\"link\" href=\"https://github.com/tomasz-tomczyk/pressmark\" target=\"_blank\" rel=\"noopener noreferrer\">Pressmark</a>",
+  },
+  { LABEL: "Typography", VALUE: "Crimson Pro · IBM Plex Mono · Caveat" },
+  { LABEL: "Illustrations", VALUE: "ChatGPT" },
+  {
+    LABEL: "Hosting",
+    VALUE:
+      "<a class=\"link\" href=\"https://pages.github.com\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub Pages</a>",
+  },
+  {
+    LABEL: "Analytics",
+    VALUE:
+      "<a class=\"link\" href=\"https://umami.is\" target=\"_blank\" rel=\"noopener noreferrer\">Umami</a>",
+  },
 ] as const;
 
 /** Page copy and headings for /cv. */

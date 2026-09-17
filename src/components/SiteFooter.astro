@@ -1,7 +1,7 @@
 ---
 import Icon from "@components/Icon.astro";
 import { Image } from "astro:assets";
-import { SITE, SOCIALS } from "@consts";
+import { SITE, REPO } from "@consts";
 import { SOCIAL_ICONS as ICONS } from "@lib/socialIcons";
 import catCurled from "../assets/cat-curled.png";
 import catLounging from "../assets/cat-lounging.png";
@@ -22,10 +22,9 @@ const cat = cats[Math.floor(Math.random() * cats.length)];
 
 const year = new Date().getFullYear();
 
-const links = SOCIALS.map((social) => ({
-  ...(ICONS[social.NAME] ?? { label: social.NAME, icon: undefined }),
-  href: social.HREF,
-}));
+// One link, and it is the source of the page you are reading — not my profile,
+// and not the other networks. Those are the /about "Elsewhere" list's job.
+const source = { ...ICONS.github, label: "Source on GitHub", href: REPO };
 ---
 
 {/* The cat sits on the rule rather than above it: the top border is drawn on
@@ -53,28 +52,17 @@ const links = SOCIALS.map((social) => ({
       <div
         class="flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between pb-10 md:pb-14"
       >
-        <p class="meta">
-          © {year} {SITE.NAME} <span class="mx-1 opacity-50">·</span> Built with
-          Astro
-        </p>
+        <p class="meta">© {year} {SITE.NAME}</p>
 
-        <ul class="flex items-center gap-5">
-          {
-            links.map((link) => (
-              <li>
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="block text-ink/60 hover:text-accent transition-colors"
-                >
-                  <span class="sr-only">{link.label}</span>
-                  {link.icon && <Icon name={link.icon} size={19} class="block" />}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+        <a
+          href={source.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block text-ink/60 hover:text-accent transition-colors"
+        >
+          <span class="sr-only">{source.label}</span>
+          {source.icon && <Icon name={source.icon} size={19} class="block" />}
+        </a>
       </div>
     </div>
   </div>

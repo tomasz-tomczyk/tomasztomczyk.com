@@ -13,6 +13,7 @@ import {
   ABOUT_NOTE,
   CURRENTLY,
   COLOPHON,
+  PROJECTS,
 } from "@consts";
 import { SOCIAL_ICONS as ICONS } from "@lib/socialIcons";
 
@@ -49,8 +50,10 @@ const colophon = COLOPHON.map((entry) => ({
     <div class="mx-auto max-w-measure-wide">
       {/* items-end: portrait and name share a baseline. */}
       <section class="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-10 md:items-end mb-14 md:mb-20">
-        <figure class="col-span-1 md:col-span-4 m-0 max-w-[16rem] md:max-w-none mx-auto md:mx-0">
-          <div class="relative aspect-[4/5] overflow-hidden rounded-md hairline">
+        <figure
+          class="polaroid col-span-1 md:col-span-4 m-0 max-w-[16rem] md:max-w-none mx-auto md:mx-0"
+        >
+          <div class="relative aspect-[4/5] overflow-hidden">
             <picture>
               <source srcset="/tomasz-portrait.webp" type="image/webp" />
               <img
@@ -80,8 +83,7 @@ const colophon = COLOPHON.map((entry) => ({
             Hi, I'm Tomasz.
           </h1>
           <p class="dek-voice mt-4 max-w-[34rem]">
-            A software engineer who likes leading teams, shipping things that
-            hold up, and writing down what I learned on the way.
+            A staff engineer who likes solving puzzles, championing people, sharing best practices and learnings in attempts to build better products and teams.
           </p>
         </div>
       </section>
@@ -91,26 +93,14 @@ const colophon = COLOPHON.map((entry) => ({
       <section class="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12 mb-16 md:mb-24">
         <div class="col-span-1 md:col-span-7 lg:col-span-8">
           <div class="prose-pressmark dropcap">
-            {/* The dropcap takes the first letter of this paragraph, so it
-                has to open on a plain capital — "I'm" gives you a giant I and
-                an orphaned apostrophe. */}
             <p>
-              My job title says software engineer, but the part I care about
-              most is leading teams and championing people. Elixir, DevOps, and
-              the practice of running engineering well — shipping things that
-              hold up, and helping the people around me get better at their
-              craft.
+              Born in Poland, programming from an early age I've been pursuing programming and English. I ended up combining these when I moved abroad to study in the UK. I am now settled there, with a beautiful wife and daughter (and cat).
             </p>
             <p>
-              Most of what I know I learned the slow way: from production
-              incidents, from code review, from being wrong in front of people
-              who were generous about it. This site is where I write that down,
-              partly so someone else skips a step, mostly so I can find it again
-              myself.
+              In the last decade or so I've been working on supporting teams and individuals; improving processes, communication and culture around shipping software in the roles of Tech Lead and Head of Engineering; now I've sidestepped into more IC-focused role as a staff engineer and I spend more time on developer tooling, solving hard technical problems and unblocking critical issues for the business.
             </p>
             <p>
-              I live in South London. When I'm not writing code, I'm usually
-              writing about it.
+              I live in South London. In my spare time, I build Crit (see below), hang out with my family and game!
             </p>
           </div>
         </div>
@@ -163,21 +153,47 @@ const colophon = COLOPHON.map((entry) => ({
         </aside>
       </section>
 
+      {/* One line each — the detail belongs on the project's own site. */}
+      <section class="mb-16 md:mb-24">
+        <PanelLabel class="mb-6">Projects</PanelLabel>
+        <ul class="border-t border-raised">
+          {PROJECTS.map((project) => (
+            <li
+              class="grid grid-cols-1 gap-1 border-b border-raised py-3 sm:grid-cols-12 sm:gap-6 sm:items-baseline"
+            >
+              <span class="sm:col-span-3 font-display text-lg text-ink">
+                <a
+                  href={project.HREF}
+                  class="link"
+                  {...(project.HREF.startsWith("http")
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                >
+                  {project.NAME}
+                </a>
+              </span>
+              {/* Ink, not `meta`: at 68% ink the note reads as a caption under
+                  a heading rather than as the line that carries the sense. */}
+              <span class="sm:col-span-9 text-ink leading-snug">{project.NOTE}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {/* The whole history lives on /cv; this is a signpost, not a summary.
-          The drawing is on the right so the link, not the illustration, is
-          what the eye reaches at the end of the line. */}
+          One line of copy, so the drawing is narrow and the link sits on the
+          same line as the question rather than under it. */}
       <IllustratedPanel
         src={cvDesk}
         alt=""
         side="right"
-        artWidth="11rem"
+        artWidth="8rem"
         seed={19}
         class="mb-16 md:mb-24"
       >
-        <h2>Looking for my CV?</h2>
-        <p class="cv-link">
-          <a href="/cv" class="link">Read the CV &rarr;</a>
-        </p>
+        <h2>
+          Looking for my CV? <a href="/cv" class="link">Read it &rarr;</a>
+        </h2>
       </IllustratedPanel>
 
       {/* No rule above this one: it follows the torn sheet, and a hairline
@@ -195,23 +211,31 @@ const colophon = COLOPHON.map((entry) => ({
 </SiteLayout>
 
 <style>
+  /* The portrait as a print: an even border on three sides and a deeper lip
+     below. Those proportions are what makes it read as a polaroid, so they are
+     fixed lengths — scaling the lip with the image loses it. Square corners for
+     the same reason. The tilt is on the figure so the shadow tilts with it, and
+     stays under 2deg: the section aligns the photo and the h1 on a baseline,
+     and a steeper angle visibly breaks that line. */
+  .polaroid {
+    background: var(--color-raised);
+    padding: 0.8rem 0.8rem 3rem;
+    box-shadow:
+      0 1px 2px color-mix(in srgb, var(--color-ink) 18%, transparent),
+      0 14px 28px -16px color-mix(in srgb, var(--color-ink) 45%, transparent);
+    transform: rotate(-1.4deg);
+    transform-origin: 60% 60%;
+  }
+
   /* Slotted into IllustratedPanel, so these sit in this page's scope. */
   h2 {
     font-family: var(--font-display);
-    font-size: 1.938rem;
+    font-size: 1.625rem;
     font-weight: 400;
-    line-height: 1.15;
+    line-height: 1.2;
     letter-spacing: -0.01em;
     color: var(--color-ink);
     margin: 0;
     text-wrap: balance;
-  }
-
-  .cv-link {
-    margin: 0.7rem 0 0;
-  }
-  .cv-link a {
-    font-family: var(--font-display);
-    font-size: 1.310rem;
   }
 </style>
