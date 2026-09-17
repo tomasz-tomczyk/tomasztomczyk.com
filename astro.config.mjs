@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
@@ -20,8 +21,18 @@ export default defineConfig({
     "/contact": "/about",
   },
 
+  // Astro 7 defaults to 'jsx', which drops the whitespace between adjacent
+  // inline elements. Several separators here — the CV's role/date `·`, its
+  // `—` — are their own elements with only source whitespace around them, and
+  // render as `Engineer·May 2024` without this.
+  compressHTML: true,
+
   integrations: [mdx(), sitemap()],
   markdown: {
+    // Astro 7 renders Markdown with Sätteri by default, which has no remark or
+    // rehype stage. The Pressmark code-block plugins below are unified plugins,
+    // so the pipeline stays on unified until they are ported.
+    processor: unified(),
     shikiConfig: {
       theme: pressmarkShiki,
     },
