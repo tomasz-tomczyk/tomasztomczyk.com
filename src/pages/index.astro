@@ -1,48 +1,171 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import SiteLayout from "@layouts/SiteLayout.astro";
 import { PanelLabel } from "@pressmark/astro";
 import PostListItem from "@components/PostListItem.astro";
+import { getTags } from "@lib/tags";
+import { formatDate, readingTime } from "@lib/utils";
 import { SITE, HOME } from "@consts";
 
 const posts = (await getCollection("posts"))
   .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+/* The newest piece is set as the lead; the rest run as a list under it. The
+   page is the front of a notebook, not a feed — one thing is the invitation. */
+const [lead, ...rest] = posts;
+const recent = rest.slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
+
+const tags = await getTags();
+const firstYear = posts.length
+  ? posts[posts.length - 1].data.date.getFullYear()
+  : new Date().getFullYear();
 ---
 
 <SiteLayout title={SITE.NAME} description={HOME.DESCRIPTION}>
   <div class="px-5 py-10 md:px-12">
-    <div class="mx-auto max-w-[46rem]">
-    <section class="mb-16">
-      <PanelLabel class="mb-7">Hello</PanelLabel>
-      <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em] mb-8">
-        Hi, I'm Tomasz.
-      </h1>
-      <div class="prose-pressmark space-y-5">
-        <p>
-          I'm a software engineer who loves leading teams and championing people. Recently I've been at <em>Vetspire</em>,
-          where I transitioned from Head of Engineering to Staff Engineer, working with a team spread across the US and UK.
-        </p>
-        <p>
-          I'm passionate about Elixir, DevOps, and the practice of leading teams well. From building car-sharing platforms
-          at <em>Toyota Connected</em> to customer-centric work at <em>Vetspire</em>, my focus has always been on delivering
-          high-quality solutions and helping my team grow.
-        </p>
-      </div>
-    </section>
+    <div class="mx-auto max-w-[64rem]">
+      {/* A masthead rather than an introduction. Who I am is /about's job —
+          repeating the bio here halves the effect of both pages. */}
+      <header class="mb-14 md:mb-20">
+        <div
+          class="flex items-baseline justify-between gap-4 border-b border-raised pb-3 mb-9"
+        >
+          <span class="meta">Notes on software — since {firstYear}</span>
+          <span class="meta">
+            {posts.length} {posts.length === 1 ? "post" : "posts"}
+          </span>
+        </div>
 
-    <section>
-      <div class="flex items-baseline justify-between mb-6">
-        <PanelLabel>Latest posts</PanelLabel>
-        <a href="/posts" class="btn-link">See all →</a>
-      </div>
-      <ul class="space-y-0">
-        {posts.map((post) => (
-          <PostListItem post={post} timeWidth="w-24" descriptionLines={1} />
-        ))}
-      </ul>
-    </section>
+        <h1
+          class="font-display font-light text-4xl md:text-5xl lg:text-6xl leading-[1.02] tracking-[-0.018em] text-ink max-w-[44rem]"
+        >
+          Things I learned the hard way, written down.
+        </h1>
+        <p class="dek mt-5 max-w-[38rem]">
+          Elixir, DevOps, incidents, and the practice of leading engineering
+          teams — mostly so I can find it again myself, and partly so someone
+          else skips a step.
+        </p>
+      </header>
+
+      {
+        lead && (
+          <section class="mb-14 md:mb-20 border-y border-raised py-8 md:py-10">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10">
+              {/* The artwork column only exists when the post brought one —
+                  most here don't, and an empty frame is worse than none. */}
+              {lead.data.cover && (
+                <div class="md:col-span-5 md:order-2">
+                  <div class="rounded-md overflow-hidden hairline aspect-[4/3]">
+                    <Image
+                      src={lead.data.cover}
+                      alt={lead.data.coverAlt ?? ""}
+                      widths={[420, 840]}
+                      sizes="(min-width: 768px) 24rem, 100vw"
+                      class="block h-full w-full object-cover"
+                      style={`object-position:${lead.data.coverPosition ?? "center"}`}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div
+                class:list={[
+                  "md:col-span-7",
+                  !lead.data.cover && "md:col-span-9",
+                ]}
+              >
+                <PanelLabel class="mb-4">Latest</PanelLabel>
+                <p class="meta mb-3">
+                  {formatDate(lead.data.date)}
+                  <span class="mx-2 opacity-50">·</span>
+                  {readingTime(lead.body ?? "")}
+                </p>
+                <h2
+                  class="font-display font-light text-3xl md:text-4xl lg:text-5xl leading-[1.06] tracking-[-0.014em] max-w-[40rem]"
+                >
+                  <a
+                    href={`/posts/${lead.id}`}
+                    class="text-ink hover:text-accent transition-colors"
+                  >
+                    {lead.data.title}
+                  </a>
+                </h2>
+                <p class="mt-4 text-lg text-ink/75 leading-relaxed max-w-[36rem]">
+                  {lead.data.description}
+                </p>
+                <p class="mt-5">
+                  <a href={`/posts/${lead.id}`} class="btn-link">
+                    Continue reading →
+                  </a>
+                </p>
+              </div>
+            </div>
+          </section>
+        )
+      }
+
+      <section class="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+        <div class="md:col-span-8">
+          <div class="flex items-baseline justify-between mb-5">
+            <PanelLabel>More notes</PanelLabel>
+            <a href="/posts" class="btn-link">See all →</a>
+          </div>
+          <ul class="border-t border-raised">
+            {
+              recent.map((post) => (
+                <PostListItem
+                  post={post}
+                  timeWidth="w-24"
+                  descriptionLines={1}
+                />
+              ))
+            }
+          </ul>
+        </div>
+
+        {/* The rail makes the shape of the archive visible — which subjects
+            keep coming back, and how far the thing goes back. */}
+        <aside class="md:col-span-4 space-y-10 md:pt-1">
+          {
+            tags.length > 0 && (
+              <div>
+                <PanelLabel class="mb-3">Subjects</PanelLabel>
+                <ul class="border-t border-raised">
+                  {tags.map((tag) => (
+                    <li class="border-b border-raised">
+                      <a
+                        href={`/tags/${tag.slug}`}
+                        class="group flex items-baseline justify-between gap-4 py-2.5 text-ink hover:text-accent transition-colors"
+                      >
+                        <span class="font-display text-lg">{tag.name}</span>
+                        <span class="meta shrink-0">{tag.posts.length}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+
+          <div>
+            <PanelLabel class="mb-3">Archive</PanelLabel>
+            <p class="text-ink/75 leading-snug">
+              Everything published since {firstYear}, newest first.
+            </p>
+            <p class="meta mt-3">
+              <a
+                href="/posts"
+                class="text-accent hover:underline hover:underline-offset-4"
+              >
+                Browse the archive →
+              </a>
+            </p>
+          </div>
+        </aside>
+      </section>
     </div>
   </div>
 </SiteLayout>
