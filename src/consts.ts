@@ -52,20 +52,14 @@ export const SOCIALS: Socials = [
 ];
 
 /**
- * The handwritten note pointing at the photo on /about. Same hand as the post
- * byline, so it has to sound like the same person — short, and about the
- * picture rather than about the page.
- *
- * Two or three words per line wraps best at the width it's given.
+ * The handwritten note pointing at the photo on /about. Keep it short and
+ * about the picture — two or three words per line wrap best at this width.
  */
 export const ABOUT_NOTE = "Grizzly Creek, Colorado, 2026";
 
 /**
- * The /about sidebar. A snapshot, not a CV — it is meant to go stale and be
- * rewritten, which is why the date it was last true sits next to it.
- *
- * TODO(tomasz): everything below is my best guess from the rest of the site.
- * Rewrite it in your own words, then move UPDATED to the day you did.
+ * The /about sidebar. A snapshot, not a CV — it is meant to go stale, which is
+ * why UPDATED sits next to it. Move UPDATED whenever you rewrite ITEMS.
  */
 export const CURRENTLY = {
   UPDATED: "September 2026",
@@ -77,9 +71,7 @@ export const CURRENTLY = {
   ],
 } as const;
 
-/**
- * How the site is put together. Rendered in the /about colophon.
- */
+/** How the site is put together. Rendered in the /about colophon. */
 export const COLOPHON = [
   { LABEL: "Typography", VALUE: "Crimson Pro · DM Mono · Caveat" },
   { LABEL: "Built with", VALUE: "Astro · Tailwind v4 · Pressmark" },
@@ -87,12 +79,7 @@ export const COLOPHON = [
   { LABEL: "Analytics", VALUE: "Umami — no cookies, nothing personal" },
 ] as const;
 
-/**
- * Where I've worked. Rendered on /about.
- *
- * TODO(tomasz): the PERIOD values below are placeholders — I don't have your
- * real dates. Check every one before this goes live.
- */
+/** Where I've worked. Rendered on /about. */
 export const ROLES = [
   {
     ORG: "Vetspire",

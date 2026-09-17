@@ -13,17 +13,12 @@
    The post byline.
 
    Everything here targets Pressmark's published AuthorCard hooks — never its
-   markup. Avatar size, the link, and the hover affordance are all props or
-   theme behaviour as of 0.6.0, so what remains is this site's own typography.
+   markup.
    --------------------------------------------------------------------------- */
 
-/* Type from the 37signals exploration. Separation in that design is carried by
-   register — nothing here sits at body size or body leading — so these sizes
-   are load-bearing, not cosmetic.
-
-   One deviation from the prototype: it coloured the facts line `muted`.
-   `.panel-label` is the theme's own 11px mono-caps step and reads at ink@68%
-   rather than muted's 2.24:1. Same register, more legible. */
+/* The byline has no rules around it; separation is carried by register, so
+   nothing here may sit at body size or body leading. These sizes are
+   load-bearing, not cosmetic. */
 .byline-row .author-name {
   font-size: 23px;
   font-weight: 600;
@@ -37,11 +32,10 @@
   color: color-mix(in srgb, var(--color-ink) 72%, var(--color-surface));
 }
 
-/* Take the avatar out of flow so the facts line sits under the BIO, not under
-   the photo. At 5.5rem the portrait is taller than name + bio together, so
-   while it drives the card's height every gap below it inherits ~36px of slack
-   that no margin asked for. Absolute-positioning it makes the card as tall as
-   its text; the row reserves the photo's height instead. */
+/* Take the avatar out of flow so the facts line sits under the bio, not under
+   the photo. At 5.5rem the portrait is taller than name + bio together, so in
+   flow it drives the card's height and every gap below it inherits ~36px of
+   slack no margin asked for. The row reserves the photo's height instead. */
 .byline-row { min-height: 5.5rem; }
 .byline-row .author-card {
   display: block;
@@ -55,9 +49,8 @@
   transition: box-shadow 140ms ease;
 }
 
-/* The card links to /about, and the theme already accents the name on hover.
-   The ring is ours: a photo is the one part of the card that reads as an
-   image rather than a control, so it needs its own cue. */
+/* The theme already accents the name on hover; the ring is ours, because a
+   photo reads as an image rather than a control and needs its own cue. */
 .byline-row .author-card-linked:hover .author-avatar {
   box-shadow: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--color-accent);
 }
@@ -67,11 +60,9 @@
   border-radius: 2px;
 }
 
-/* Links in the facts line underline on hover rather than only changing colour
-   — a colour shift alone is not a strong enough affordance at 11px, and it is
-   the one cue that survives a per-post theme re-pointing the accent. Drawn as
-   a border so it sits clear of the descenders. (Pressmark ships the same
-   convention on `.author-link`; these are tag links, which are ours.) */
+/* Underline on hover, not colour alone: at 11px a colour shift is too weak an
+   affordance, and the underline is the one cue that survives a per-post theme
+   re-pointing the accent. Drawn as a border so it clears the descenders. */
 .byline-facts a {
   color: inherit;
   text-decoration: none;
@@ -83,9 +74,8 @@
   border-bottom-color: currentColor;
 }
 
-/* The middot was set in `line` — a hairline token at ~1.1:1 on paper, which is
-   correct for a rule and invisible as a glyph. It wants to sit under the text
-   it divides without disappearing, so it takes ink directly. */
+/* Not `line`: that token is ~1.1:1 on paper, correct for a rule and invisible
+   as a glyph. The separator takes ink directly so it stays visible. */
 .byline-facts .byline-sep {
   color: color-mix(in srgb, var(--color-ink) 42%, var(--color-surface));
 }

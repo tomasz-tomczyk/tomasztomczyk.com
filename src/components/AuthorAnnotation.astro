@@ -2,13 +2,12 @@
 /**
  * The handwritten aside beside the byline.
  *
- * Deliberately outside Pressmark: the theme ships one look and two faces, and
- * a note in the author's own voice is content about *me*, not a theme
- * primitive. The face (`--font-hand`) and the accent ink both live here.
+ * Outside Pressmark on purpose: the theme ships one look and two faces, and a
+ * note in the author's own voice is site content, not a theme primitive. The
+ * face (`--font-hand`) and the accent ink both live here.
  *
- * It appears on every post, so it carries information rather than a joke — a
- * joke is stale by the third read. The arrow hangs off the end of the line and
- * drops into the avatar, so the note reads as pinned to the face beside it.
+ * It appears on every post, so the text should carry information rather than a
+ * joke — a joke is stale by the third read.
  */
 type Props = {
   text: string;
@@ -42,8 +41,8 @@ const flipped = direction === "left";
   <svg
     class:list={[
       "text-accent block",
-      /* The byline tucks the arrow up under the end of a right-aligned line.
-         Flipped, the tail rises on the same side the text starts on, so the
+      /* Unflipped, the arrow tucks up under the end of a right-aligned line.
+         Flipped, the tail rises on the side the text starts on, so the same
          tuck would cross the last line — it gets clearance instead. */
       flipped ? "mr-auto -scale-x-100 mt-3" : "ml-auto -mt-2",
     ]}
@@ -77,10 +76,9 @@ const flipped = direction === "left";
     hyphens: none;
   }
 
-  /* Mirroring the arrow alone leaves the text tilting away from what it
-     points at, so the tilt flips with it. Both lines start on the arrow's own
-     left edge, so the note stacks over the arrow rather than drifting off to
-     the right of it. */
+  /* The tilt flips with the arrow — mirroring the arrow alone leaves the text
+     tilting away from what it points at. Left-aligned so the note stacks over
+     the arrow rather than drifting right of it. */
   .flipped .hand {
     transform: rotate(7deg);
     text-align: left;

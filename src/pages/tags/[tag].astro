@@ -21,7 +21,7 @@ const count = `${posts.length} ${posts.length === 1 ? "post" : "posts"}`;
 
 <SiteLayout title={`#${name}`} description={`Posts tagged ${name}.`}>
   <div class="px-5 py-10 md:px-12">
-    <div class="mx-auto max-w-[46rem]">
+    <div class="mx-auto max-w-measure-wide">
       <header class="mb-12">
         <PanelLabel class="mb-7">Tag <span class="opacity-50">/</span> {count}</PanelLabel>
         <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em]">
@@ -29,7 +29,6 @@ const count = `${posts.length} ${posts.length === 1 ? "post" : "posts"}`;
         </h1>
       </header>
 
-      {/* Same component as /posts, so a tag page and the archive read alike. */}
       <ul>
         {posts.map((post) => (
           <PostListItem

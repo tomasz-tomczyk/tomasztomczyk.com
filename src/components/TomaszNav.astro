@@ -7,8 +7,8 @@ type Props = {
 
 const { currentPath = "/" } = Astro.props;
 
-// Three destinations. Pressmark's Sidebar rail earns its 260px on sites with
-// many sections; here it was mostly empty, so the Topbar shell fits better.
+// Topbar rather than Pressmark's Sidebar: the rail earns its 260px on sites
+// with many sections, and this one has three.
 const items: TopbarItem[] = [
   { href: "/", label: "Home" },
   { href: "/posts", label: "Posts" },

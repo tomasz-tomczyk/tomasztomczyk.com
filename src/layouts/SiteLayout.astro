@@ -1,6 +1,7 @@
 ---
 import { BaseLayout } from "@pressmark/astro";
 import TomaszNav from "@components/TomaszNav.astro";
+import SiteFooter from "@components/SiteFooter.astro";
 import { SITE } from "@consts";
 import { resolveTheme, type PostTheme } from "@lib/postTheme";
 import "@styles/global.css";
@@ -15,7 +16,7 @@ type Props = {
   /**
    * Per-post look. Re-points Pressmark's colour and font roles on <html>, so
    * the nav and footer theme along with the article rather than staying cream
-   * around a dark page. Pinned — readers get what the frontmatter says.
+   * around a dark page.
    */
   theme?: PostTheme;
   /** Identifies the post in the build error when a theme is unreadable. */
@@ -36,7 +37,7 @@ const fullTitle = title === SITE.NAME ? title : `${title} | ${SITE.NAME}`;
 const canonicalURL = new URL(currentPath, Astro.site).href;
 
 // Throws at build time if the post re-points the surface but leaves a text
-// role behind — the failure free-form theming actually produces.
+// role behind.
 const resolved = resolveTheme(theme, themeSource ?? currentPath);
 
 const htmlAttrs: Record<string, string | undefined> = {
@@ -64,9 +65,9 @@ const htmlAttrs: Record<string, string | undefined> = {
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
 
-    {/* Tells the browser to render scrollbars and form controls to match the
-        page, instead of flashing light chrome on a dark post. Derived from the
-        surface colour, not from the reader's preference. */}
+    {/* Scrollbars and form controls match the page rather than flashing light
+        chrome on a dark post. Derived from the surface colour, not from the
+        reader's preference. */}
     <meta name="color-scheme" content={resolved.colorScheme} />
 
     {/* Faces this post asked for, loaded only on this page. */}
@@ -86,4 +87,6 @@ const htmlAttrs: Record<string, string | undefined> = {
   <main class="pt-14">
     <slot />
   </main>
+
+  <SiteFooter />
 </BaseLayout>

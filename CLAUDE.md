@@ -117,3 +117,23 @@ Posts and components are full of em-dashes, arrows and `✦`. `perl -pi` without
 contains one; zsh's `echo` expands `\n` into a real newline, which breaks JSON on
 stdin. Use `python3` with explicit `encoding='utf-8'` for scripted edits, or a
 CSS escape (`content: "\2022"`) where the file format allows it.
+
+## Comments
+
+A comment earns its place only if it is still useful a year from now, to
+someone who never saw the conversation that produced it. Write what is true of
+the code as it stands.
+
+- Explain the constraint, the gotcha, or the non-obvious mechanism — the thing
+  the code cannot say about itself.
+- No history: no "this replaces", "we used to", "before this prop existed",
+  "what changed in 0.4.0", no narration of a rejected alternative or of the
+  review that led here. That belongs in the commit message.
+- No design-review prose. One sentence on why a value is load-bearing beats a
+  paragraph defending it.
+- Don't restate the code, and don't leave TODOs addressed to a person about
+  work from a past session.
+
+When editing a file, fix the comments around your change to match this. When a
+comment above the code you touched narrates a past decision, delete it rather
+than adding a second one below it.

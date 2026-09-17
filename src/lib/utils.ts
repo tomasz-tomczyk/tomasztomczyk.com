@@ -15,9 +15,8 @@ export function readingTime(html: string) {
 /**
  * Turn a free-form frontmatter tag into a URL segment.
  *
- * Tags are authored as plain text with no allowlist, matching the free-form
- * choice made for post themes. That keeps authoring frictionless and puts the
- * burden here: anything that isn't a letter or digit becomes a hyphen.
+ * Tags are authored as plain text with no allowlist, so anything that isn't a
+ * letter or digit becomes a hyphen.
  *
  * Throws rather than returning "" for a tag with nothing slug-able, so the
  * failure surfaces at build time instead of producing the route `/tags/`.
@@ -45,8 +44,7 @@ export function tagSlug(tag: string): string {
  * The same tag repeated across posts is the normal case and passes.
  *
  * Called from the tag routes, so a clash fails `astro build` rather than
- * shipping. It catches collisions, not typos — `elixr` is a legitimate new
- * tag as far as this can tell.
+ * shipping. It catches collisions, not typos.
  */
 export function assertNoTagCollisions(tags: string[]): void {
   const bySlug = new Map<string, Set<string>>();

@@ -1,9 +1,9 @@
 /**
- * Tests for per-post theming.
+ * Tests for per-post theming. Run with `npm test`.
  *
  * `assertReadable` fails `astro build`, so its thresholds are load-bearing:
  * too strict and the house palette can't ship, too loose and an unreadable
- * post goes live. Run with `npm test`.
+ * post goes live.
  */
 import {
   contrast,
@@ -138,7 +138,7 @@ check("fontUrl is returned for per-page loading", () => {
 
 console.log("\nthe guard:");
 
-check("THE BUG: dark surface, forgotten text roles", () =>
+check("dark surface with forgotten text roles is rejected", () =>
   throws(
     () => resolveTheme({ surface: "#14161A" }, "src/content/posts/oban.md"),
     ["ink", "src/content/posts/oban.md"],
@@ -179,8 +179,8 @@ check("a code role is emitted as --color-code-* when overridden", () => {
   }
 });
 
-/* The whole reason these roles exist: they sit on `raised`, not `surface`.
-   A theme can be fine against the page and still invisible in a code block. */
+/* Code roles sit on `raised`, not `surface`: a theme can be fine against the
+   page and still invisible in a code block. */
 check("code roles are measured against raised, not surface", () => {
   // Legible on the cream surface (7.4:1) but nearly invisible on a dark
   // raised — only a raised-based check catches it.
@@ -191,7 +191,7 @@ check("code roles are measured against raised, not surface", () => {
   );
 });
 
-check("THE BUG: dark post re-points raised but forgets the code roles", () =>
+check("dark post re-points raised but forgets the code roles", () =>
   throws(
     () =>
       resolveTheme(
@@ -205,9 +205,8 @@ check("THE BUG: dark post re-points raised but forgets the code roles", () =>
         },
         "src/content/posts/absinthe",
       ),
-    // Not code-string: the shipped green is 3.20:1 even on this dark raised,
-    // so it clears the floor on its own. Two of the three still fail, which is
-    // all it takes to stop the build.
+    // code-string is absent on purpose: the shipped green is 3.20:1 even on
+    // this dark raised, so it clears the floor on its own.
     ["code-function", "code-number", "src/content/posts/absinthe"],
     "dark post, default code roles",
   ));

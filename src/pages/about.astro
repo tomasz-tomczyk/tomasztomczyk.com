@@ -43,9 +43,8 @@ const colophon = COLOPHON.map((entry) => ({
 
 <SiteLayout title={ABOUT.TITLE} description={ABOUT.DESCRIPTION}>
   <div class="px-5 py-10 md:px-12">
-    <div class="mx-auto max-w-[64rem]">
-      {/* Portrait and name share a baseline: the photo is a column of the
-          page, not an avatar dropped into a paragraph. */}
+    <div class="mx-auto max-w-measure-wide">
+      {/* items-end: portrait and name share a baseline. */}
       <section class="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-10 md:items-end mb-14 md:mb-20">
         <figure class="col-span-1 md:col-span-4 m-0 max-w-[16rem] md:max-w-none">
           <div class="relative aspect-[4/5] overflow-hidden rounded-md hairline">
@@ -65,9 +64,8 @@ const colophon = COLOPHON.map((entry) => ({
         </figure>
 
         <div class="col-span-1 md:col-span-8">
-          {/* Fills the dead space the tall portrait leaves above the heading,
-              and points back at it. Hidden below md, where the photo is above
-              the text and the arrow would point at nothing. */}
+          {/* Hidden below md: the photo stacks above the text there, so the
+              arrow would point at nothing. */}
           <AuthorAnnotation
             text={ABOUT_NOTE}
             direction="left"
@@ -88,9 +86,8 @@ const colophon = COLOPHON.map((entry) => ({
         </div>
       </section>
 
-      {/* Prose left, standing details right. The aside is the part that goes
-          stale — keeping it out of the running text means it can be rewritten
-          without touching a sentence. */}
+      {/* Prose left, standing details right. The aside holds everything that
+          goes stale, so it can be rewritten without touching a sentence. */}
       <section class="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12 mb-16 md:mb-24">
         <div class="col-span-1 md:col-span-7 lg:col-span-8">
           <div class="prose-pressmark dropcap">
@@ -129,7 +126,7 @@ const colophon = COLOPHON.map((entry) => ({
             <PanelLabel class="mb-3">Elsewhere</PanelLabel>
             <ul class="border-t border-raised">
               {/* The network name is a label, not a destination — only the
-                  handle links out, so the row reads as "GitHub: this is me". */}
+                  handle links out. */}
               {links.map((link) => (
                 <li class="flex items-baseline justify-between gap-4 border-b border-raised py-3">
                   <span class="flex items-baseline gap-2.5 shrink-0">
@@ -184,8 +181,6 @@ const colophon = COLOPHON.map((entry) => ({
         </ul>
       </section>
 
-      {/* The site explaining itself. Small print by design — anyone who wants
-          it will look here, and nobody else has to read past it. */}
       <section class="border-t border-raised pt-10">
         <PanelLabel class="mb-6">Colophon</PanelLabel>
         <DetailList

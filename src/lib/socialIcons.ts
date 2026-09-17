@@ -1,9 +1,7 @@
 /**
- * Brand glyphs for the social links — single filled paths on a 24×24 viewBox
- * (`fill="currentColor"`), so they all carry the same visual weight. Email is a
- * filled envelope to match rather than a stroked outline.
- *
- * Shared by /about and the AuthorCard on posts, so the two can't drift.
+ * Brand glyphs for the social links. Every entry must be a single filled path
+ * on a 24×24 viewBox (`fill="currentColor"`) so they carry the same weight —
+ * no stroked outlines.
  */
 export const SOCIAL_ICONS: Record<string, { label: string; path: string }> = {
   email: {

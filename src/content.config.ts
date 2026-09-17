@@ -3,15 +3,12 @@ import { glob } from "astro/loaders";
 import { z } from "zod";
 
 /**
- * Per-post look.
+ * Per-post look. Free-form — any hex, any font stack.
  *
- * Free-form on purpose — any hex, any font stack. Pressmark ships one light
- * palette and no dark mode, so a post that wants dark supplies its own values
- * for ALL the colour roles. Setting `surface` without the text roles produces
- * an unreadable page; `assertReadable` in src/lib/postTheme.ts catches that at
- * build time rather than letting it ship.
- *
- * A post's look is pinned. There is no reader-preference switching.
+ * Pressmark ships one light palette and no dark mode, so a post that wants
+ * dark must supply its own values for ALL the colour roles. Setting `surface`
+ * without the text roles produces an unreadable page; `assertReadable` in
+ * src/lib/postTheme.ts catches that at build time.
  */
 const theme = z
   .object({
@@ -47,10 +44,7 @@ const posts = defineCollection({
       draft: z.boolean().optional(),
       tags: z.array(z.string()).optional(),
 
-      /**
-       * Header artwork. Rendered as a banner behind the title and tags, and
-       * reused as the social card image.
-       */
+      /** Banner behind the title, reused as the social card image. */
       cover: image().optional(),
       coverAlt: z.string().optional(),
       /** Crop anchor for the banner, e.g. "center", "50% 30%", "left bottom". */

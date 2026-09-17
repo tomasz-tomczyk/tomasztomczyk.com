@@ -16,8 +16,7 @@ export type Socials = {
   HREF: string;
   /**
    * How you're known there — the only part of the row that links out. Written
-   * by hand rather than sliced off HREF, because every network spells its
-   * handle differently and none of them match their URL path.
+   * by hand rather than sliced off HREF: handles rarely match the URL path.
    */
   HANDLE: string;
 }[];
@@ -25,12 +24,11 @@ export type Socials = {
 export type Author = {
   NAME: string;
   BIO: string;
-  /** Path under /public, e.g. "/avatar.jpg". Omitted until there's an image. */
+  /** Path under /public, e.g. "/avatar.jpg". */
   AVATAR?: string;
   /**
-   * The handwritten aside beside the byline. Shown on every post, so it has to
-   * be something that doesn't go stale — a gloss on the name, not a gag.
-   * Omitted, no note is drawn.
+   * The handwritten aside beside the byline. Shown on every post, so it should
+   * be something that doesn't go stale. Omitted, no note is drawn.
    */
   NOTE?: string;
 };

@@ -1,6 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
+import catPortrait from "../assets/tomasz-cat.png";
+import catPhoto from "../assets/tomasz-cat-photo.png";
 import SiteLayout from "@layouts/SiteLayout.astro";
 import { PanelLabel } from "@pressmark/astro";
 import PostListItem from "@components/PostListItem.astro";
@@ -12,8 +14,7 @@ const posts = (await getCollection("posts"))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-/* The newest piece is set as the lead; the rest run as a list under it. The
-   page is the front of a notebook, not a feed — one thing is the invitation. */
+/* Newest post is the lead; the rest run as a list under it. */
 const [lead, ...rest] = posts;
 const recent = rest.slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
 
@@ -22,31 +23,65 @@ const tags = await getTags();
 
 <SiteLayout title={SITE.NAME} description={HOME.DESCRIPTION}>
   <div class="px-5 py-10 md:px-12">
-    <div class="mx-auto max-w-[64rem]">
-      <section class="mb-14 md:mb-20">
-        <PanelLabel class="mb-7">Hello</PanelLabel>
-        <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em] mb-8">
-          Hi, I'm Tomasz.
-        </h1>
-        <div class="prose-pressmark space-y-5">
-          <p>
-            I'm a software engineer who loves leading teams and championing people. Recently I've been at <em>Vetspire</em>,
-            where I transitioned from Head of Engineering to Staff Engineer, working with a team spread across the US and UK.
-          </p>
-          <p>
-            I'm passionate about Elixir, DevOps, and the practice of leading teams well. From building car-sharing platforms
-            at <em>Toyota Connected</em> to customer-centric work at <em>Vetspire</em>, my focus has always been on delivering
-            high-quality solutions and helping my team grow.
-          </p>
+    <div class="mx-auto max-w-measure-wide">
+      <section class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 md:items-center mb-14 md:mb-20">
+        <div class="md:col-span-7">
+          <PanelLabel class="mb-7">Hello</PanelLabel>
+          <h1 class="font-display font-light text-4xl md:text-5xl leading-[1.04] text-ink tracking-[-0.015em] mb-8">
+            Hi, I'm Tomasz.
+          </h1>
+          <div class="prose-pressmark space-y-5">
+            <p>
+              I'm a software engineer who loves leading teams and championing people. Recently I've been at <em>Vetspire</em>,
+              where I transitioned from Head of Engineering to Staff Engineer, working with a team spread across the US and UK.
+            </p>
+            <p>
+              I'm passionate about Elixir, DevOps, and the practice of leading teams well. From building car-sharing platforms
+              at <em>Toyota Connected</em> to customer-centric work at <em>Vetspire</em>, my focus has always been on delivering
+              high-quality solutions and helping my team grow.
+            </p>
+          </div>
         </div>
+
+        {/* A cut-out, not a photograph: no frame, no rounding — a border would
+            box the transparency rather than the subject. He faces the prose.
+            The painting crossfades to the photograph it was made from on hover;
+            both are laid out in the same box, so they have to share a framing. */}
+        <figure class="group relative md:col-span-5 m-0 order-first md:order-none max-w-[18rem] md:max-w-none">
+          {/* webp, not the default avif: alpha compresses far better here, and
+              the cut-out is nothing but edges against transparency. */}
+          <Image
+            src={catPortrait}
+            alt="Painted illustration of Tomasz holding a ginger cat, both looking off to one side"
+            widths={[400, 600, 900]}
+            sizes="(min-width: 768px) 26rem, 18rem"
+            format="webp"
+            quality={68}
+            loading="eager"
+            class="block w-full h-auto transition-opacity duration-500 ease-out group-hover:opacity-0 motion-reduce:transition-none"
+          />
+          {/* The painting alone carries the meaning; the photo underneath is
+              the same moment, so it takes empty alt rather than repeating it. */}
+          <Image
+            src={catPhoto}
+            alt=""
+            widths={[400, 600, 900]}
+            sizes="(min-width: 768px) 26rem, 18rem"
+            format="webp"
+            quality={68}
+            loading="lazy"
+            aria-hidden="true"
+            class="pointer-events-none absolute left-0 top-0 block w-full h-auto opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 motion-reduce:transition-none"
+          />
+        </figure>
       </section>
 
       {
         lead && (
           <section class="mb-14 md:mb-20 border-y border-raised py-8 md:py-10">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10">
-              {/* The artwork column only exists when the post brought one —
-                  most here don't, and an empty frame is worse than none. */}
+              {/* No artwork column at all when the post has no cover — most
+                  don't, and an empty frame is worse than none. */}
               {lead.data.cover && (
                 <div class="md:col-span-5 md:order-2">
                   <div class="rounded-md overflow-hidden hairline aspect-[4/3]">
@@ -117,8 +152,6 @@ const tags = await getTags();
           </ul>
         </div>
 
-        {/* The rail makes the shape of the archive visible — which subjects
-            keep coming back, and how much of each there is. */}
         <aside class="md:col-span-4 space-y-10 md:pt-1">
           {
             tags.length > 0 && (

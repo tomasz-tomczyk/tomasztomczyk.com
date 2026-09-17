@@ -1,18 +1,16 @@
 /**
- * Per-post theming.
+ * Per-post theming: builds an inline style string for <html> from free-form
+ * values in the post's frontmatter.
  *
- * Pressmark ships one palette — light, six roles — and deliberately has no dark
- * mode. Every role is a plain CSS custom property, so a post can re-point any
- * of them for its own page. That is what this module builds: a style string for
- * <html>, from free-form values in the post's frontmatter.
+ * Pressmark ships one light palette of six roles and no dark mode. Every role
+ * is a plain CSS custom property, so a post can re-point any of them.
  *
- * A post's look is PINNED. There is no reader-preference switching; what the
- * frontmatter says is what everybody sees. The one thing derived automatically
- * is the CSS `color-scheme` hint, computed from the surface colour so scrollbars
- * and form controls match rather than flashing white on a dark page.
+ * A post's look is PINNED — there is no reader-preference switching. The one
+ * value derived automatically is the CSS `color-scheme` hint, computed from the
+ * surface colour so scrollbars and form controls match the page.
  *
- * Free-form means a typo can ship an unreadable page, so `assertReadable`
- * runs at build time and throws. See `CONTRAST_FLOORS`.
+ * Free-form means a typo can ship an unreadable page, so `assertReadable` runs
+ * at build time and throws. See `CONTRAST_FLOORS`.
  */
 
 /** Pressmark's shipped values — the baseline a post overrides from. */
@@ -25,11 +23,10 @@ export const DEFAULT_ROLES = {
   accent: "#E05A24",
 
   /**
-   * Syntax roles, used only inside code blocks. Pressmark's palette rule is
-   * "exactly six colours"; these are a documented exception, scoped to code.
-   * They sit on `raised` (the code background), not on `surface`.
+   * Syntax roles, used only inside code blocks — an exception to Pressmark's
+   * six-colour rule, scoped to code. They sit on `raised`, not `surface`.
    *
-   * Kebab-case so `--color-${role}` stays a mechanical mapping — a camelCase
+   * Kebab-case so `--color-${role}` stays a mechanical mapping; a camelCase
    * key would emit `--color-codeString`.
    */
   "code-string": "#007E46",
@@ -102,10 +99,9 @@ export function contrast(a: string, b: string): number {
  * Minimum contrast per role, against the background that role is drawn on.
  *
  * These are NOT WCAG AA. Pressmark's own palette is knowingly below AA
- * (`muted` is 2.24:1, `accent` 3.37:1) and holding it to AA would fail the
- * house style on every page. The job here is to catch the failure free-form
- * theming actually produces: a post that re-points a background and forgets a
- * text role, landing near 1:1 and rendering invisible.
+ * (`muted` is 2.24:1, `accent` 3.37:1), so holding it to AA would fail the
+ * house style on every page. The job here is narrower: catch a post that
+ * re-points a background and forgets a text role, landing near 1:1.
  *
  * Each floor sits just under Pressmark's shipped ratio for that role.
  */
@@ -113,8 +109,7 @@ export const CONTRAST_FLOORS = {
   ink: 4.5, // body text — the one role held to a real reading standard
   accent: 3.0, // links and CTAs (shipped: 3.37)
   muted: 2.0, // tiny mono captions only (shipped: 2.24)
-  // Syntax accents, not body text, so they take accent's floor rather than
-  // ink's. Shipped: 4.25, 5.35, 4.97 on cream — headroom spent on chroma, not darkness.
+  // Syntax accents, not body text, so they take accent's floor rather than ink's.
   "code-string": 3.0,
   "code-function": 3.0,
   "code-number": 3.0,
@@ -126,10 +121,9 @@ export type CheckedRole = keyof typeof CONTRAST_FLOORS;
 /**
  * Which background each checked role is judged against.
  *
- * Page text is measured on `surface`. Code tokens are measured on `raised`,
- * because that is what a code block is painted with — a colour can be fine
- * against the page and still invisible inside a snippet. Getting this wrong
- * is silent: the build passes and the code block is unreadable.
+ * Page text is measured on `surface`, code tokens on `raised` — a colour can
+ * be fine against the page and still invisible inside a snippet. Getting this
+ * wrong is silent: the build passes and the code block is unreadable.
  */
 export const ROLE_BACKGROUND = {
   ink: "surface",
@@ -184,9 +178,8 @@ export type ResolvedTheme = {
 };
 
 /**
- * Resolve frontmatter into what the layout needs.
- *
- * `where` identifies the post in the error message when the theme is unreadable.
+ * Resolve frontmatter into what the layout needs. `where` identifies the post
+ * in the error message when the theme is unreadable.
  */
 export function resolveTheme(theme: PostTheme | undefined, where: string): ResolvedTheme {
   const t = theme ?? {};

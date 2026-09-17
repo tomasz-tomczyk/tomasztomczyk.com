@@ -1,9 +1,9 @@
 /**
- * Tests for the small helpers.
+ * Tests for the small helpers. Run with `npm test`.
  *
  * `tagSlug` is load-bearing: it turns free-form frontmatter into URLs, and
  * `assertNoTagCollisions` fails `astro build` when two distinct tags would
- * land on the same page. Run with `npm test`.
+ * land on the same page.
  */
 import { tagSlug, assertNoTagCollisions, formatDate, readingTime } from "./utils.ts";
 
@@ -72,9 +72,9 @@ check("distinct slugs pass", () => {
   assertNoTagCollisions(["elixir", "graphql", "ci-cd"]);
 });
 
-/* The reason the guard exists: free-form tags mean two spellings can collapse
-   onto one URL, silently merging two tags into one page. */
-check("THE BUG: two spellings collapsing to one slug", () =>
+/* Free-form tags mean two spellings can collapse onto one URL, silently
+   merging two tags into one page. */
+check("two spellings collapsing to one slug is rejected", () =>
   throws(
     () => assertNoTagCollisions(["CI/CD", "ci-cd"]),
     ["ci-cd", "CI/CD"],
@@ -85,7 +85,6 @@ check("case-only differences collide", () =>
   throws(() => assertNoTagCollisions(["Elixir", "elixir"]), ["elixir"], "case collision"));
 
 check("the same tag written identically twice is not a collision", () => {
-  // Two posts sharing a tag is the normal case, not an error.
   assertNoTagCollisions(["elixir", "elixir", "graphql"]);
 });
 

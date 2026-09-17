@@ -13,8 +13,8 @@ export type Tag = {
  * Every tag across published posts, newest posts first within each.
  *
  * Shared by both tag routes so the index and the individual pages can't
- * disagree about what exists. Drafts are excluded here rather than at each
- * call site — a draft's tags should not create a page.
+ * disagree about what exists. Drafts are excluded here: a draft's tags should
+ * not create a page.
  */
 export async function getTags(): Promise<Tag[]> {
   const posts = (await getCollection("posts"))
@@ -34,8 +34,7 @@ export async function getTags(): Promise<Tag[]> {
     }
   }
 
-  // Busiest first, then alphabetical — a tag with one post is the least
-  // useful thing on the page, so it sinks.
+  // Busiest first, then alphabetical.
   return [...bySlug.values()].sort(
     (a, b) => b.posts.length - a.posts.length || a.name.localeCompare(b.name),
   );
