@@ -27,6 +27,7 @@ theme:
   code-function: "#E79AD6"
   code-number: "#EEB154"
   code-variable: "#5ED1DE"
+discussion: 3
 ---
 
 [Absinthe](https://hex.pm/packages/absinthe) is a popular GraphQL library for Elixir. It's the de-facto choice if you want to publish a GQL API. Vetspire uses it for its public API, where at peak we handle upward of 80 000 requests/minute.

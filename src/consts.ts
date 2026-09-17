@@ -8,6 +8,9 @@ export const SITE: Site = {
   NUM_PROJECTS_ON_HOMEPAGE: 0,
 };
 
+/** Where the source lives, and where post comments are discussed. */
+export { REPO_URL as REPO } from "@lib/comments";
+
 export const HOME: Metadata = {
   TITLE: "Home",
   DESCRIPTION: "Notes and essays on software engineering by Tomasz Tomczyk.",

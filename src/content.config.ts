@@ -50,6 +50,14 @@ const posts = defineCollection({
       /** Crop anchor for the banner, e.g. "center", "50% 30%", "left bottom". */
       coverPosition: z.string().optional(),
 
+      /**
+       * GitHub Discussion number for this post's comments. A post without one
+       * renders no comment section at all, so this rolls out a post at a time.
+       * A number rather than a path: the /blog -> /posts move would have
+       * broken path matching, and a number does not care about URLs.
+       */
+      discussion: z.number().int().positive().optional(),
+
       theme,
     }),
 });

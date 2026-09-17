@@ -3,6 +3,7 @@ title: 'How I use crit to build crit'
 description: 'Dogfooding a code review tool through a planning-first AI workflow'
 date: 'Mar 16 2026'
 tags: ["ai-assisted-development"]
+discussion: 5
 ---
 
 ![crit](./crit-preview.png)

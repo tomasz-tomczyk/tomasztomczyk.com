@@ -12,6 +12,7 @@ import {
 } from "@pressmark/astro";
 import AuthorAnnotation from "@components/AuthorAnnotation.astro";
 import PostFooter from "@components/PostFooter.astro";
+import Comments from "@components/Comments.astro";
 import ArchiveNote from "@components/ArchiveNote.astro";
 import { formatDate, readingTime, tagSlug } from "@lib/utils";
 import { AUTHOR } from "@consts";
@@ -196,6 +197,8 @@ const hasToc = headings.some((h) => h.depth === 2);
       <Prose dropcap class="wide-media">
         <Content components={{ ArchiveNote }} />
       </Prose>
+
+      <Comments discussion={post.data.discussion} />
 
       <PostFooter prev={prev} next={next} />
     </div>

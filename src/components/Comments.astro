@@ -1,0 +1,73 @@
+---
+/**
+ * The comment thread under a post, read from a GitHub Discussion at build time.
+ *
+ * There is no form: replying happens on GitHub, and the panel above the thread
+ * is the only call to action. That is what keeps this page free of third-party
+ * script and lets the comments wear the site's own type instead of an iframe's.
+ *
+ * A post with no `discussion` in its frontmatter renders nothing at all.
+ */
+import CommentInvite from "@components/CommentInvite.astro";
+import CommentCard from "@components/CommentCard.astro";
+import { getThread } from "@lib/comments";
+import { REPO } from "@consts";
+
+type Props = {
+  discussion?: number;
+};
+
+const { discussion } = Astro.props as Props;
+
+const thread = discussion === undefined ? undefined : await getThread(discussion);
+
+// A number pointing at a discussion the fetch could not reach still gets the
+// invitation — the link is built from the number, not from the response.
+const replyUrl =
+  thread?.url ??
+  (discussion === undefined ? undefined : `${REPO}/discussions/${discussion}`);
+
+const comments = thread?.comments ?? [];
+const total = thread?.total ?? 0;
+---
+
+{replyUrl && (
+  <section class="mx-auto mt-20 max-w-measure" aria-labelledby="comments-heading">
+    {/* The panel is the section's heading as well as its call to action, and it
+        sits above the thread: a long thread would bury the only way to join. */}
+    <CommentInvite
+      href={replyUrl}
+      total={total}
+      reactions={thread?.reactions ?? []}
+      headingId="comments-heading"
+    />
+
+    {total > 0 && (
+      <ol class="mt-12 list-none space-y-10 pl-0">
+        {comments.map((comment) => (
+          <li>
+            <CommentCard comment={comment} />
+
+            {comment.replies.length > 0 && (
+              <ol class="replies mt-6 list-none space-y-6 pl-0">
+                {comment.replies.map((reply) => (
+                  <li><CommentCard comment={reply} small /></li>
+                ))}
+              </ol>
+            )}
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
+)}
+
+<style>
+  /* The only rule in the thread, and it runs vertically: a reply is marked by
+     the margin it hangs off, not by a box around it. */
+  .replies {
+    margin-left: 1.25rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--color-line);
+  }
+</style>

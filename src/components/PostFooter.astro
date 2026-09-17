@@ -102,8 +102,10 @@ const emptyClass =
   </nav>
 
   <footer class="meta mt-12 text-center">
-    <a href="/posts" class="link"
-      >&larr; All posts</a
+    {/* The glyph is inline-block via `arrow`, which keeps it out of the
+        underline: decorations do not propagate into an atomic inline. */}
+    <a href="/posts" class="btn-link"
+      ><span class="arrow">&larr;</span> All posts</a
     >
   </footer>
 </div>
@@ -144,7 +146,7 @@ const emptyClass =
 
   /* The arrow is the only thing that moves outward — it says which way the
      door opens. Touch never hovers, so it rests half-visible there. */
-  .arrow {
+  .door .arrow {
     opacity: 0.45;
     transition:
       opacity 0.2s,
@@ -165,7 +167,7 @@ const emptyClass =
 
   @media (prefers-reduced-motion: reduce) {
     .squiggle,
-    .arrow {
+    .door .arrow {
       transition: none;
     }
   }

@@ -1,0 +1,179 @@
+---
+/**
+ * One comment: who, when, and their prose. Used for both a top-level comment
+ * and a reply — Discussions allow exactly one level, so `small` is the only
+ * difference between the two.
+ */
+import { Prose } from "@pressmark/astro";
+import Icon from "@components/Icon.astro";
+import Reactions from "@components/Reactions.astro";
+import type { Comment } from "@lib/comments";
+import { formatDate } from "@lib/utils";
+
+type Props = {
+  comment: Comment;
+  small?: boolean;
+};
+
+const { comment, small = false } = Astro.props as Props;
+const size = small ? 32 : 40;
+---
+
+<article class="comment">
+  {comment.author.avatarUrl && (
+    <img
+      class:list={["avatar", { "avatar-sm": small, "avatar-author": comment.isAuthor }]}
+      src={comment.author.avatarUrl}
+      alt=""
+      width={size}
+      height={size}
+      loading="lazy"
+      decoding="async"
+    />
+  )}
+
+  <div class="min-w-0">
+    {/* Same furniture as the post's own byline: `byline-facts` carries the
+        link and separator treatment, `panel-label` the 12px mono-caps step. */}
+    <ul class="byline-facts panel-label m-0 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 p-0 list-none">
+      <li>
+        {/* `ugc` and `nofollow`: these point wherever a commenter's GitHub
+            profile points, and the site does not vouch for them. */}
+        <a href={comment.author.url} rel="nofollow ugc" class="author">{comment.author.login}</a>
+      </li>
+
+      {comment.isAuthor && (
+        <li><span class="badge-meta author-badge">Author</span></li>
+      )}
+
+      <li aria-hidden="true" class="byline-sep">&middot;</li>
+
+      <li class="flex items-center gap-2">
+        <Icon name="calendar" size={14} class="opacity-70" />
+        <a href={comment.url}>{formatDate(new Date(comment.createdAt))}</a>
+      </li>
+    </ul>
+
+    {/* GitHub returns bodyHTML already sanitized, which is why a markdown
+        renderer is not in the dependency list. */}
+    <Prose class="comment-body mt-2">
+      <Fragment set:html={comment.bodyHTML} />
+    </Prose>
+
+    <Reactions reactions={comment.reactions} href={comment.url} />
+  </div>
+</article>
+
+<style>
+  /* One scale for the whole comment, set here so the pieces answer to each
+     other rather than to whatever looked right in isolation. Every step sits
+     one below the article's own: 22px prose, 17px name, 12px byline. */
+  .comment {
+    --body: 19px;
+    --name: 17px;
+    --code: 15px;
+    --meta: 11px;
+
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: start;
+  }
+
+  /* The name is the one thing in the row that is not metadata, so it steps out
+     of the mono-caps run into the reading face. */
+  .author {
+    font-family: var(--font-body);
+    font-size: var(--name);
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-ink);
+  }
+
+  /* `raised` is the panel ground, which is invisible against the page here, so
+     the badge takes a little ink of its own to read as a chip. Padding is
+     tight enough that it sits inside the line rather than setting its height. */
+  .author-badge {
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+    font-size: var(--meta);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.35rem;
+  }
+
+  /* Round, unbordered and slightly desaturated: a GitHub avatar is the one
+     thing on the page the site did not draw, so it is toned down to sit with
+     the paper rather than punch through it. */
+  .avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    filter: saturate(0.85);
+  }
+  .avatar-sm {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /* The same ring the post byline gives the author's photo on hover, resting
+     here: in a thread of strangers' avatars it is what picks out the host.
+     Two shadows, so the accent reads as a ring rather than a halo. */
+  .avatar-author {
+    box-shadow:
+      0 0 0 2px var(--color-surface),
+      0 0 0 3px var(--color-accent);
+  }
+
+  /* Comments are other people's prose next to yours, so they run one step
+     below the article and never take its opening flourish. Far below that and
+     a comment stops reading as prose and starts reading as fine print. */
+  .comment-body {
+    font-size: var(--body);
+    overflow-wrap: anywhere;
+  }
+  .comment-body :global(> :first-child) {
+    margin-top: 0;
+  }
+  .comment-body :global(> :last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Prose sizes code against the article's measure and air; at comment scale
+     both are too generous, so the block is re-set rather than scaled. All mono
+     in a comment lands on --code, inline and block alike.
+
+     Margin is zero because GitHub wraps a highlighted block in its own div:
+     that wrapper already takes prose's flow spacing, and a margin here would
+     be added to it rather than replacing it. */
+  .comment-body :global(pre) {
+    font-size: var(--code);
+    line-height: 1.55;
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+  }
+  .comment-body :global(:not(pre) > code) {
+    font-size: var(--code);
+  }
+
+  /* Everything below guards against content the site did not write. GitHub's
+     bodyHTML brings its own classes (`highlight`, `pl-k`), none of which this
+     stylesheet knows, so anything that can overflow has to be caught here. */
+  .comment-body :global(pre),
+  .comment-body :global(.highlight),
+  .comment-body :global(table) {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .comment-body :global(img) {
+    max-width: 100%;
+    height: auto;
+  }
+  /* A commenter can open at h1. Nothing in a comment outranks the post. */
+  .comment-body :global(h1),
+  .comment-body :global(h2),
+  .comment-body :global(h3) {
+    font-size: 1.05em;
+  }
+</style>

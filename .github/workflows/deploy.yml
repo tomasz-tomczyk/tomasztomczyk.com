@@ -5,26 +5,52 @@ on:
   # Using a different branch name? Replace `main` with your branch’s name
   push:
     branches: [main]
+  # Comments are read from GitHub Discussions at build time and baked into the
+  # HTML, so a new or edited comment only reaches the site through a rebuild.
+  # These triggers are what make that feel immediate rather than scheduled.
+  discussion:
+    types: [created, edited, deleted]
+  discussion_comment:
+    types: [created, edited, deleted]
+  # A backstop for a webhook that never arrived. Comments are the only thing
+  # on the site that can go stale without a push.
+  schedule:
+    - cron: "17 6 * * *"
   # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
+
+# A burst of comments fires a run each, and `actions/deploy-pages` fails if a
+# deployment is already in flight. Queue them instead of racing; not cancelling
+# means the deploy that is mid-flight finishes rather than being torn down.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 # Allow this job to clone the repo and create a page deployment
 permissions:
   contents: read
+  discussions: read
   pages: write
   id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Read by src/lib/comments.ts. Set at job level, not on the step: the
+      # build runs inside a composite action, and only job-level env reliably
+      # reaches the steps inside one. Without it the build still succeeds and
+      # the posts simply render no comments, which is what happens locally.
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout your repository using git
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Install, build, and upload your site
-        uses: withastro/action@v2
+        uses: withastro/action@v6
         with:
           # path: . # The root location of your Astro project inside the repository. (optional)
-          node-version: 22 # The specific version of Node that should be used to build your site. Defaults to 20. (optional)
+          # Pinned rather than left to the action, which now defaults to 24.
+          node-version: 22
           package-manager: pnpm@latest # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
 
   deploy:
@@ -36,4 +62,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

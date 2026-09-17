@@ -37,3 +37,5 @@ import IconLabel from "@components/IconLabel.astro";
 - Uswitch: https://www.uswitch.com/ — hand-drawn square U symbol from the site header.
 
 Company and language glyphs are blog-sized monochrome interpretations, not official brand asset downloads.
+
+Reaction icons: 👍 `thumbs-up.svg`, 👎 `thumbs-down.svg`, 😄 `smile.svg`, 🎉 `party.svg`, 😕 `confused.svg`, ❤️ `heart.svg`, 🚀 `rocket.svg`, 👀 `eyes.svg`. All are available through `Icon`, for example `<Icon name="heart" size={20} title="Love" />`.

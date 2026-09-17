@@ -1,0 +1,145 @@
+---
+/**
+ * The head of every post's comment section — both its heading and the only way
+ * into the thread.
+ *
+ * The whole panel is one link: there is no form on the site, so this is how a
+ * reader gets from here to replying. It reuses IllustratedPanel so it reads as
+ * the same piece of furniture as the archive note and the CV blocks rather
+ * than as a widget bolted to the end of the article.
+ */
+import IllustratedPanel from "@components/IllustratedPanel.astro";
+import Reactions from "@components/Reactions.astro";
+import discuss from "../assets/discuss-github.png";
+import type { Reaction } from "@lib/comments";
+
+type Props = {
+  href: string;
+  /** Surviving comments, replies included. Drives the copy and the count. */
+  total: number;
+  /** Reactions on the discussion itself, i.e. on the post. */
+  reactions: Reaction[];
+  /** The panel heads the section, so it carries the section's label. */
+  headingId: string;
+};
+
+const { href, total, reactions, headingId } = Astro.props as Props;
+---
+
+<a href={href} class="invite-link">
+  <IllustratedPanel
+    src={discuss}
+    alt=""
+    side="right"
+    artWidth="17rem"
+    seed={17}
+    class="invite"
+  >
+    <h2 id={headingId}>
+      {total > 0 ? "Join the discussion" : "Start the conversation"}
+    </h2>
+
+    <p class="invite-copy">
+      {total > 0
+        ? "Comments on this post live in its GitHub discussion."
+        : "Nobody has replied yet. Comments on this post live in its GitHub discussion."}
+    </p>
+
+    {/* No href: the panel is already the link, and anchors cannot nest. */}
+    <Reactions reactions={reactions} />
+
+    <p class="invite-cue">
+      {total > 0 && (
+        <>{total === 1 ? "1 response" : `${total} responses`} <span class="sep" aria-hidden="true">&middot;</span> </>
+      )}
+      Reply on GitHub <span aria-hidden="true">&rarr;</span>
+    </p>
+  </IllustratedPanel>
+</a>
+
+<style>
+  /* The link wraps the panel rather than sitting inside it, so the drawing is
+     part of the target. Block, because an inline anchor would not contain the
+     panel's own margin. */
+  .invite-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* IllustratedPanel sets 3.5rem of its own top margin for sitting in prose.
+     Here the section's spacing already did that work. */
+  .invite-link :global(.invite) {
+    margin-top: 1.75rem;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .invite-link:hover :global(.invite),
+  .invite-link:focus-visible :global(.invite) {
+    transform: translateY(-0.125rem);
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.938rem;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    margin: 0;
+    text-wrap: balance;
+    transition: color 0.2s;
+  }
+  .invite-link:hover h2,
+  .invite-link:focus-visible h2 {
+    color: var(--color-accent);
+  }
+
+  .invite-copy {
+    font-family: var(--font-body);
+    font-size: 20px;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-ink) 88%, var(--color-surface));
+    margin: 0.75rem 0 0;
+    max-width: 34rem;
+    text-wrap: pretty;
+  }
+
+  /* `muted` is 2.24:1 on paper — correct for a rule, unreadable at 12px. This
+     is the grey every other small run on the site takes, at 5.46:1. */
+  .invite-cue {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-ink) 68%, var(--color-surface));
+    margin: 1.25rem 0 0;
+  }
+  .invite-cue span {
+    display: inline-block;
+    margin-left: 0.15em;
+    color: var(--color-accent);
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* The same ink the post byline gives its separators: enough to read as a
+     glyph, light enough not to punctuate. */
+  .invite-cue .sep {
+    margin: 0 0.25em 0 0.35em;
+    color: color-mix(in srgb, var(--color-ink) 42%, var(--color-surface));
+  }
+  .invite-link:hover .invite-cue span:not(.sep),
+  .invite-link:focus-visible .invite-cue span:not(.sep) {
+    transform: translateX(3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .invite-link :global(.invite),
+    .invite-cue span,
+    h2 {
+      transition: none;
+    }
+    .invite-link:hover :global(.invite),
+    .invite-link:focus-visible :global(.invite) {
+      transform: none;
+    }
+  }
+</style>

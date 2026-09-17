@@ -3,6 +3,7 @@ title: 'When vibe coding backfired'
 description: 'Or how I lost several hours of my life'
 date: 'Feb 12 2026'
 tags: ["ai-assisted-development", "elixir"]
+discussion: 7
 ---
 
 I already had a tendency to chase too many side projects before the LLM era. Now it's easier than ever before to spin something new up! No matter whether these projects end up being successful, without a doubt I've learnt valuable lessons on each one and this is a short story of how Claude caused me to lose several hours chasing a weird bug.

@@ -1,0 +1,99 @@
+---
+/**
+ * A row of reaction counts, drawn in the site's own icons rather than emoji.
+ *
+ * Read-only. Reacting needs a GitHub session, so `href` points at whatever
+ * carries the reaction — the comment or the discussion — and a chip is a link
+ * only when there is somewhere for it to go. Inside the invite panel there is
+ * not: that whole panel is already one link, and an anchor cannot nest.
+ */
+import Icon from "@components/Icon.astro";
+import type { IconName } from "@lib/icons";
+import type { Reaction } from "@lib/comments";
+
+type Props = {
+  reactions: Reaction[];
+  /** Where a chip leads. Omit inside something that is already a link. */
+  href?: string;
+  class?: string;
+};
+
+const { reactions, href, class: className } = Astro.props as Props;
+const Chip = href ? "a" : "span";
+---
+
+{reactions.length > 0 && (
+  <ul class:list={["reactions", className]}>
+    {reactions.map((reaction) => (
+      <li>
+        <Chip href={href} class="chip" data-reaction={reaction.icon}>
+          <Icon name={reaction.icon as IconName} size={15} />
+          <span aria-hidden="true">{reaction.count}</span>
+          {/* The icon carries no meaning to a screen reader and the bare
+              number carries the wrong one, so the whole chip is named here. */}
+          <span class="sr-only">{reaction.count} {reaction.label}</span>
+        </Chip>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .reactions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Each icon keeps its emoji's hue, pulled toward the paper: a saturated
+     emoji palette dropped straight onto this ground reads as clip-art. The
+     SVGs paint stroke and their 7% fill from currentColor, so one colour per
+     type tints the whole glyph. Four of the eight are yellow hands and faces,
+     which is simply what those emoji are. */
+  .chip[data-reaction="thumbs-up"] { --tint: #c68a2d; }
+  .chip[data-reaction="thumbs-down"] { --tint: #a8823f; }
+  .chip[data-reaction="smile"] { --tint: #d2a017; }
+  .chip[data-reaction="confused"] { --tint: #b99034; }
+  .chip[data-reaction="party"] { --tint: #cf6a3a; }
+  .chip[data-reaction="heart"] { --tint: #bf3b34; }
+  .chip[data-reaction="rocket"] { --tint: #6e7c96; }
+  .chip[data-reaction="eyes"] { --tint: #58708f; }
+
+  /* Only the glyph takes the hue. The count stays in the metadata grey, so a
+     row of chips still reads as one row rather than eight coloured words. */
+  .chip :global(.blog-icon) {
+    color: var(--tint, currentColor);
+  }
+
+  /* A chip is the paper one step up from its ground, not a pill of accent:
+     these are counts, and nothing here should compete with the prose above. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-ink) 6%, transparent);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1;
+    color: color-mix(in srgb, var(--color-ink) 68%, var(--color-surface));
+    text-decoration: none;
+    transition: background-color 120ms ease, color 120ms ease;
+  }
+
+  a.chip:hover,
+  a.chip:focus-visible {
+    background: color-mix(in srgb, var(--color-ink) 11%, transparent);
+    color: var(--color-ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chip {
+      transition: none;
+    }
+  }
+</style>

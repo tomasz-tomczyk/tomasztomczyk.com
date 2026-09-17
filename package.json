@@ -14,7 +14,7 @@
     "astro": "astro",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "node --experimental-strip-types --no-warnings src/lib/postTheme.test.ts && node --experimental-strip-types --no-warnings src/lib/utils.test.ts"
+    "test": "node --experimental-strip-types --no-warnings src/lib/postTheme.test.ts && node --experimental-strip-types --no-warnings src/lib/utils.test.ts && node --experimental-strip-types --no-warnings src/lib/comments.test.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.6",

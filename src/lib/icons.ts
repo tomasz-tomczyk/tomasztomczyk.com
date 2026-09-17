@@ -1,3 +1,11 @@
+import thumbsUp from "../../public/icons/thumbs-up.svg?raw";
+import thumbsDown from "../../public/icons/thumbs-down.svg?raw";
+import smile from "../../public/icons/smile.svg?raw";
+import party from "../../public/icons/party.svg?raw";
+import confused from "../../public/icons/confused.svg?raw";
+import heart from "../../public/icons/heart.svg?raw";
+import rocket from "../../public/icons/rocket.svg?raw";
+import eyes from "../../public/icons/eyes.svg?raw";
 import calendar from "../../public/icons/calendar.svg?raw";
 import clock from "../../public/icons/clock.svg?raw";
 import email from "../../public/icons/email.svg?raw";
@@ -11,6 +19,14 @@ import toyota from "../../public/icons/toyota.svg?raw";
 import uswitch from "../../public/icons/uswitch.svg?raw";
 
 const sources = {
+  "thumbs-up": thumbsUp,
+  "thumbs-down": thumbsDown,
+  "smile": smile,
+  "party": party,
+  "confused": confused,
+  "heart": heart,
+  "rocket": rocket,
+  "eyes": eyes,
   calendar,
   clock,
   email,
