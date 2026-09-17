@@ -29,22 +29,63 @@ export const ABOUT: Metadata = {
 export const AUTHOR: Author = {
   NAME: "Tomasz Tomczyk",
   BIO: "Software engineer. I write about Elixir, DevOps, and the practice of leading teams well.",
+  AVATAR: "/tomasz.jpg",
+  NOTE: "Written by a human",
 };
 
 export const SOCIALS: Socials = [
   {
     NAME: "github",
     HREF: "https://github.com/tomasz-tomczyk",
+    HANDLE: "@tomasz-tomczyk",
   },
   {
     NAME: "linkedin",
     HREF: "https://www.linkedin.com/in/tomczyktomasz",
+    HANDLE: "in/tomczyktomasz",
   },
   {
     NAME: "bluesky",
     HREF: "https://bsky.app/profile/tomasztomczyk.bsky.social",
+    HANDLE: "@tomasztomczyk.bsky.social",
   },
 ];
+
+/**
+ * The handwritten note pointing at the photo on /about. Same hand as the post
+ * byline, so it has to sound like the same person — short, and about the
+ * picture rather than about the page.
+ *
+ * Two or three words per line wraps best at the width it's given.
+ */
+export const ABOUT_NOTE = "Grizzly Creek, Colorado, 2026";
+
+/**
+ * The /about sidebar. A snapshot, not a CV — it is meant to go stale and be
+ * rewritten, which is why the date it was last true sits next to it.
+ *
+ * TODO(tomasz): everything below is my best guess from the rest of the site.
+ * Rewrite it in your own words, then move UPDATED to the day you did.
+ */
+export const CURRENTLY = {
+  UPDATED: "September 2026",
+  ITEMS: [
+    { LABEL: "Work", VALUE: "Staff Engineer at Vetspire — Elixir, Phoenix, GraphQL" },
+    { LABEL: "Making", VALUE: "Pressmark, the Astro theme this site runs on" },
+    { LABEL: "Writing", VALUE: "Notes on Elixir, DevOps, and running engineering teams" },
+    { LABEL: "Place", VALUE: "South London" },
+  ],
+} as const;
+
+/**
+ * How the site is put together. Rendered in the /about colophon.
+ */
+export const COLOPHON = [
+  { LABEL: "Typography", VALUE: "Crimson Pro · DM Mono · Caveat" },
+  { LABEL: "Built with", VALUE: "Astro · Tailwind v4 · Pressmark" },
+  { LABEL: "Written in", VALUE: "Markdown, by hand, usually late" },
+  { LABEL: "Analytics", VALUE: "Umami — no cookies, nothing personal" },
+] as const;
 
 /**
  * Where I've worked. Rendered on /about.
