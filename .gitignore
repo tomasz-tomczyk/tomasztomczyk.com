@@ -23,3 +23,6 @@ pnpm-debug.log*
 
 # Playwright MCP artifacts
 .playwright-mcp/
+
+# Ephemeral design explorations — local working files
+.design-exploration/

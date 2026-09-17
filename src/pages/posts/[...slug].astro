@@ -8,11 +8,10 @@ import {
   PostNav,
   Hero,
   AuthorCard,
-  Badge,
 } from "@pressmark/astro";
+import AuthorAnnotation from "@components/AuthorAnnotation.astro";
 import { formatDate, readingTime, tagSlug } from "@lib/utils";
-import { SOCIAL_ICONS } from "@lib/socialIcons";
-import { AUTHOR, SITE, SOCIALS } from "@consts";
+import { AUTHOR } from "@consts";
 
 export async function getStaticPaths() {
   const posts = (await getCollection("posts"))
@@ -55,23 +54,6 @@ const coverURL = coverImage
  */
 const hasToc = headings.some((h) => h.depth === 2);
 
-const authorLinks = [
-  {
-    label: SOCIAL_ICONS.email.label,
-    href: `mailto:${SITE.EMAIL}`,
-    icon: `<path d="${SOCIAL_ICONS.email.path}" />`,
-    iconStyle: "fill" as const,
-  },
-  ...SOCIALS.map((social) => {
-    const glyph = SOCIAL_ICONS[social.NAME];
-    return {
-      label: glyph?.label ?? social.NAME,
-      href: social.HREF,
-      icon: glyph ? `<path d="${glyph.path}" />` : undefined,
-      iconStyle: "fill" as const,
-    };
-  }),
-];
 ---
 
 <SiteLayout
@@ -138,7 +120,7 @@ const authorLinks = [
          steps rather than one width. */
       <div class="absolute inset-y-0 right-6 w-60 min-[1536px]:w-72 hidden min-[1440px]:block">
         <nav
-          class="sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto bg-surface/90 backdrop-blur-sm py-2"
+          class="sticky top-20 max-h-[calc(100vh-7rem)] overflow-y-auto bg-surface/90 backdrop-blur-sm py-2 opacity-60 transition-opacity duration-300 hover:opacity-100 focus-within:opacity-100 motion-reduce:transition-none"
           aria-label="On this page"
         >
           <TableOfContents headings={headings} />
@@ -149,50 +131,77 @@ const authorLinks = [
     {/* Byline. Horizontal, directly under the hero, and the only place the
         date and read time appear above the article. */}
     <div class="px-5 md:px-12">
-      <div class="mx-auto max-w-[46rem] mt-10 pt-6 pb-6 border-t border-b border-line flex flex-wrap items-start justify-between gap-6">
+      {/* No rules above or below. They were covering for the band looking
+          like content: a portrait and a right-hand column of chips, set at a
+          width nothing else on the page used. Fix that and the separation
+          comes for free.
+
+          What separates it now is register and space. Nothing here is at body
+          size or body leading, and the last thing before the prose is mono —
+          the one voice the article never speaks in. 36px above binds the
+          byline up to the title; 36px here plus the article's own 40px gives
+          76px below, and the accent drop cap lands as the unambiguous start.
+
+          Back on the 46rem measure, so it aligns with the article rather than
+          straddling it — which also widens the left margin enough for the note
+          to return at xl instead of waiting for the ToC breakpoint. */}
+      <div class:list={["byline-row relative mx-auto max-w-[46rem] pb-9",
+        /* 36px binds the byline up to the title block — but with a cover
+           the title lives inside the hero, so there is no title block to
+           bind to and 36px just crowds a full-bleed photo. */
+        post.data.cover ? "mt-16" : "mt-9"]}>
+        {AUTHOR.NOTE && (
+          <AuthorAnnotation text={AUTHOR.NOTE} class="hidden xl:block absolute right-full -top-2 mr-1 w-[11rem]" />
+        )}
+
+        {/* The card is the link, so there is no separate "More about me" row
+            and no social glyphs asking the reader to leave before they have
+            arrived — those live on /about, which is where this goes.
+
+            `href` rather than an anchor wrapped around the component: only the
+            name is a real link and it stretches over the card, so the reader
+            hears "Tomasz Tomczyk" instead of the whole bio, and `links` could
+            be added back without nesting anchors. */}
         <AuthorCard
           name={AUTHOR.NAME}
           avatar={AUTHOR.AVATAR}
           bio={AUTHOR.BIO}
-          links={authorLinks}
           variant="inline"
-          eyebrow="Written by"
-          class="flex-1 min-w-[20rem]"
+          href="/about"
+          avatarSize="lg"
         />
 
-        {/* Date, read time and tags together — they are all "about this post"
-            rather than part of it, which is why the tags moved off the hero. */}
-        <div class="shrink-0 pt-1">
-          <ul class="space-y-2">
-            <li class="meta flex items-center gap-3">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
-              {dateLabel}
-            </li>
-            <li class="meta flex items-center gap-3">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
-              {minutes}
-            </li>
-          </ul>
+        {/* One line, not a column: date, read time and tags are all "about this
+            post" and none of them outranks the others. Indented past the
+            avatar so it hangs under the name rather than under the photo.
+            Outside the anchor above — the tag links cannot nest inside it. */}
+        <ul class="byline-facts panel-label mt-3.5 sm:ml-[6.5rem] flex flex-wrap items-center gap-x-2.5 gap-y-2 list-none">
+          <li class="flex items-center gap-2">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+            {dateLabel}
+          </li>
 
-          {post.data.tags && post.data.tags.length > 0 && (
-            <ul class="flex flex-wrap gap-2 mt-3 list-none p-0 m-0 max-w-[16rem]">
-              {post.data.tags.map((tag) => (
-                <li>
-                  {/* Badge renders a span, so the link wraps it. The link also
-                      carries the type and colour: `badge-meta` inherits both,
-                      so the chip matches the date beside it and picks up the
-                      hover. */}
-                  <a
-                    href={`/tags/${tagSlug(tag)}`}
-                    class="meta no-underline hover:text-accent transition-colors"
-                  >
-                    <Badge variant="meta">#{tag}</Badge>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+          <li aria-hidden="true" class="byline-sep">&middot;</li>
+
+          <li class="flex items-center gap-2">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>
+            {minutes}
+          </li>
+
+          {post.data.tags?.map((tag) => (
+            <>
+              <li aria-hidden="true" class="byline-sep">&middot;</li>
+              <li>
+                {/* No chip. A pill is a frame, and the point of dropping the
+                    rules was to stop framing things that type can just state. */}
+                <a
+                  href={`/tags/${tagSlug(tag)}`}
+                  class="no-underline hover:text-accent transition-colors"
+                >#{tag}</a>
+              </li>
+            </>
+          ))}
+        </ul>
       </div>
     </div>
 

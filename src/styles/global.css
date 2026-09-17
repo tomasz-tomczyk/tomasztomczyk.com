@@ -2,3 +2,90 @@
 @import "@pressmark/theme";
 
 @source "../../node_modules/@pressmark/astro/src/**/*.astro";
+
+/* The handwritten aside on post bylines. Pressmark ships display + mono only;
+   this face is ours, and is used in exactly one component. */
+@theme {
+  --font-hand: "Caveat", "Bradley Hand", cursive;
+}
+
+/* ---------------------------------------------------------------------------
+   The post byline.
+
+   Everything here targets Pressmark's published AuthorCard hooks — never its
+   markup. Avatar size, the link, and the hover affordance are all props or
+   theme behaviour as of 0.6.0, so what remains is this site's own typography.
+   --------------------------------------------------------------------------- */
+
+/* Type from the 37signals exploration. Separation in that design is carried by
+   register — nothing here sits at body size or body leading — so these sizes
+   are load-bearing, not cosmetic.
+
+   One deviation from the prototype: it coloured the facts line `muted`.
+   `.panel-label` is the theme's own 11px mono-caps step and reads at ink@68%
+   rather than muted's 2.24:1. Same register, more legible. */
+.byline-row .author-name {
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.008em;
+}
+.byline-row .author-bio {
+  font-size: 19px;
+  line-height: 1.5;
+  margin-top: 3px;
+  color: color-mix(in srgb, var(--color-ink) 72%, var(--color-surface));
+}
+
+/* Take the avatar out of flow so the facts line sits under the BIO, not under
+   the photo. At 5.5rem the portrait is taller than name + bio together, so
+   while it drives the card's height every gap below it inherits ~36px of slack
+   that no margin asked for. Absolute-positioning it makes the card as tall as
+   its text; the row reserves the photo's height instead. */
+.byline-row { min-height: 5.5rem; }
+.byline-row .author-card {
+  display: block;
+  position: relative;
+  padding-left: 6.5rem;   /* 5.5rem avatar + 1rem gutter */
+}
+.byline-row .author-avatar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: box-shadow 140ms ease;
+}
+
+/* The card links to /about, and the theme already accents the name on hover.
+   The ring is ours: a photo is the one part of the card that reads as an
+   image rather than a control, so it needs its own cue. */
+.byline-row .author-card-linked:hover .author-avatar {
+  box-shadow: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--color-accent);
+}
+.byline-row .author-name-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
+/* Links in the facts line underline on hover rather than only changing colour
+   — a colour shift alone is not a strong enough affordance at 11px, and it is
+   the one cue that survives a per-post theme re-pointing the accent. Drawn as
+   a border so it sits clear of the descenders. (Pressmark ships the same
+   convention on `.author-link`; these are tag links, which are ours.) */
+.byline-facts a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.byline-facts a:hover {
+  color: var(--color-accent);
+  border-bottom-color: currentColor;
+}
+
+/* The middot was set in `line` — a hairline token at ~1.1:1 on paper, which is
+   correct for a rule and invisible as a glyph. It wants to sit under the text
+   it divides without disappearing, so it takes ink directly. */
+.byline-facts .byline-sep {
+  color: color-mix(in srgb, var(--color-ink) 42%, var(--color-surface));
+}
