@@ -34,19 +34,19 @@ const count = `${posts.length} ${posts.length === 1 ? "post" : "posts"}`;
         {posts.map((post) => (
           <PostListItem
             post={post}
-            timeWidth="w-32"
+            timeWidth="sm:w-32"
             descriptionLines={2}
             dateFormat={{ month: "short", day: "numeric", year: "numeric" }}
           />
         ))}
       </ul>
 
-      <p class="meta mt-10">
-        <a href="/tags" class="link">
+      <p class="mt-10 flex items-center gap-2.5">
+        <a href="/tags" class="btn-link">
           <span class="arrow">←</span> All tags
         </a>
-        <span class="opacity-50"> / </span>
-        <a href="/posts" class="link">
+        <span aria-hidden="true" class="text-ink/30">/</span>
+        <a href="/posts" class="btn-link">
           All posts
         </a>
       </p>

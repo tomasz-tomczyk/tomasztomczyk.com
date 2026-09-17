@@ -20,13 +20,13 @@
    nothing here may sit at body size or body leading. These sizes are
    load-bearing, not cosmetic. */
 .byline-row .author-name {
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.008em;
 }
 .byline-row .author-bio {
-  font-size: 19px;
+  font-size: 20px;
   line-height: 1.5;
   margin-top: 3px;
   color: color-mix(in srgb, var(--color-ink) 72%, var(--color-surface));

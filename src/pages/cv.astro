@@ -72,10 +72,13 @@ import {
               <div class="md:col-span-9 space-y-6">
                 {company.POSITIONS.map((position) => (
                   <div>
+                    {/* The period drops to its own line on a phone. Inline, a
+                        long title wraps and strands the date mid-sentence; the
+                        separator only earns its place once they share a line. */}
                     <p class="font-display text-lg md:text-xl text-ink leading-snug">
                       {position.TITLE}
-                      <span class="mx-1.5 text-ink/30">·</span>
-                      <span class="meta">{position.PERIOD}</span>
+                      <span class="hidden sm:inline mx-1.5 text-ink/30">·</span>
+                      <span class="meta block sm:inline mt-0.5 sm:mt-0">{position.PERIOD}</span>
                     </p>
                     {position.NOTES.map((note) => (
                       <p class="mt-1.5 text-ink/80 leading-relaxed max-w-[42rem]">
@@ -154,10 +157,10 @@ import {
         </ul>
       </section>
 
-      <p class="meta mt-14">
+      <p class="mt-14">
         <a
           href="/about"
-          class="link"
+          class="btn-link"
         >
           <span class="arrow">←</span> About
         </a>

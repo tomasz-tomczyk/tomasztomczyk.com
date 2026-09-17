@@ -30,5 +30,12 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      // Vite rejects requests whose Host header it does not recognise, which
+      // is what a Tailscale `serve` proxy sends when viewing the dev site from
+      // a phone. Scoped to tailnet names — reaching the server still requires
+      // being on the tailnet. Dev only; `astro build` never reads this.
+      allowedHosts: [".ts.net"],
+    },
   },
 });

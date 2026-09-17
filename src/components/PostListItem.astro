@@ -5,7 +5,9 @@ import Icon from "@components/Icon.astro";
 
 type Props = {
   post: CollectionEntry<"posts">;
-  /** Width of the date column (Tailwind class, e.g. "w-16" or "w-24"). */
+  /** Width of the date column once the row is side-by-side. Must carry the
+      `sm:` prefix (e.g. "sm:w-20") — below that breakpoint the date stacks
+      above the title and a fixed width would strand it. */
   timeWidth: string;
   /** How many lines of the description to show before clamping. */
   descriptionLines: 1 | 2;
@@ -21,13 +23,13 @@ const clampClass = descriptionLines === 1 ? "line-clamp-1" : "line-clamp-2";
 <li class="border-b border-raised last:border-b-0">
   <a
     href={`/posts/${post.id}`}
-    class="group flex items-baseline gap-6 py-4 -mx-3 px-3 hover:bg-raised/40 transition-colors"
+    class="group flex flex-col items-start gap-1 sm:flex-row sm:items-baseline sm:gap-6 py-4 -mx-3 px-3 hover:bg-raised/40 transition-colors"
   >
     <time class:list={["meta shrink-0 inline-flex items-center gap-1.5 whitespace-nowrap", timeWidth]}>
-      <Icon name="calendar" size={13} class="opacity-70" />
+      <Icon name="calendar" size={14} class="opacity-70" />
       {formatDate(post.data.date, dateFormat)}
     </time>
-    <div class="flex-1 min-w-0">
+    <div class="flex-1 min-w-0 w-full">
       <div class="font-display font-semibold text-xl text-ink group-hover:text-accent leading-snug">
         {post.data.title}
       </div>
@@ -37,6 +39,6 @@ const clampClass = descriptionLines === 1 ? "line-clamp-1" : "line-clamp-2";
         </div>
       )}
     </div>
-    <span class="shrink-0 text-accent text-sm opacity-0 group-hover:opacity-100 transition-opacity"><span class="arrow">→</span></span>
+    <span class="hidden sm:block shrink-0 text-accent text-sm opacity-0 group-hover:opacity-100 transition-opacity"><span class="arrow">→</span></span>
   </a>
 </li>

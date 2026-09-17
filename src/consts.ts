@@ -55,6 +55,8 @@ export const SOCIALS: Socials = [
  * The handwritten note pointing at the photo on /about. Keep it short and
  * about the picture — two or three words per line wrap best at this width.
  */
+export const HOME_NOTE = "And this is Harvey";
+
 export const ABOUT_NOTE = "Grizzly Creek, Colorado, 2026";
 
 /**
